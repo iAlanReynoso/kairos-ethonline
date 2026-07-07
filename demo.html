@@ -1,0 +1,191 @@
+<style>
+  :root{
+    --bg:#f4f6fa; --surface:#ffffff; --surface-2:#eef1f7; --line:#dde2ec;
+    --ink:#0e131c; --muted:#5a6474; --faint:#8a93a5;
+    --accent:#0e8f9e;            /* signal teal — el hilo "firmado / on-chain" */
+    --bet:#0f9d63; --pass:#b7791f; --blocked:#d13a52;
+    --bet-bg:#e5f6ee; --pass-bg:#faf1dd; --blocked-bg:#fbe6ea;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0a0e16; --surface:#111725; --surface-2:#0e1420; --line:#20293a;
+      --ink:#e7ecf5; --muted:#8f99ad; --faint:#5e6b82;
+      --accent:#43d6e6; --bet:#37d691; --pass:#e6b23f; --blocked:#f2687c;
+      --bet-bg:#0f2320; --pass-bg:#241d0f; --blocked-bg:#241016;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a0e16; --surface:#111725; --surface-2:#0e1420; --line:#20293a;
+    --ink:#e7ecf5; --muted:#8f99ad; --faint:#5e6b82;
+    --accent:#43d6e6; --bet:#37d691; --pass:#e6b23f; --blocked:#f2687c;
+    --bet-bg:#0f2320; --pass-bg:#241d0f; --blocked-bg:#241016;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f6fa; --surface:#ffffff; --surface-2:#eef1f7; --line:#dde2ec;
+    --ink:#0e131c; --muted:#5a6474; --faint:#8a93a5;
+    --accent:#0e8f9e; --bet:#0f9d63; --pass:#b7791f; --blocked:#d13a52;
+    --bet-bg:#e5f6ee; --pass-bg:#faf1dd; --blocked-bg:#fbe6ea;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1060px;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  h1{font-size:clamp(30px,5.2vw,52px);line-height:1.04;letter-spacing:-.02em;margin:.5em 0 .3em;
+    text-wrap:balance;font-weight:750;max-width:16ch}
+  h1 em{font-style:normal;color:var(--accent)}
+  .lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:60ch;margin:0}
+  .meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+  .chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;padding:5px 10px;border-radius:999px;
+    border:1px solid var(--line);color:var(--muted);background:var(--surface)}
+  section{margin-top:clamp(38px,6vw,64px)}
+  .sec-label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--faint);margin-bottom:16px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;
+    display:flex;flex-direction:column;gap:14px}
+  .card.hero-card{border-color:color-mix(in srgb,var(--blocked) 55%,var(--line));
+    box-shadow:0 0 0 1px color-mix(in srgb,var(--blocked) 22%,transparent)}
+  .card q{quotes:none;font-weight:600;font-size:15.5px;display:block}
+  .verdict{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;
+    font-size:13px;letter-spacing:.06em;padding:6px 12px;border-radius:8px;width:fit-content}
+  .verdict::before{content:"";width:8px;height:8px;border-radius:2px;background:currentColor}
+  .v-bet{color:var(--bet);background:var(--bet-bg)}
+  .v-pass{color:var(--pass);background:var(--pass-bg)}
+  .v-blocked{color:var(--blocked);background:var(--blocked-bg)}
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;background:var(--line);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .stat{background:var(--surface);padding:10px 12px}
+  .stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .stat .v{font-family:var(--mono);font-size:17px;font-weight:650;margin-top:3px}
+  .stat .v.edge{color:var(--accent)}
+  .stat .v.size-0{color:var(--faint)}
+  .trace{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;
+    border-top:1px solid var(--line);padding-top:12px}
+  .trace li{font-family:var(--mono);font-size:12px;color:var(--muted);padding:4px 0 4px 16px;position:relative}
+  .trace li::before{content:"›";position:absolute;left:0;color:var(--faint)}
+  .trace li.punch{color:var(--ink);font-weight:650;margin-top:2px}
+  .trace li.punch.bet{color:var(--bet)} .trace li.punch.pass{color:var(--pass)} .trace li.punch.blocked{color:var(--blocked)}
+  .pitchline{font-size:clamp(17px,2.4vw,22px);font-weight:600;text-wrap:balance;max-width:40ch;margin:0 0 4px}
+  .pitchline b{color:var(--blocked)}
+  /* proof chain */
+  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+  .step .n{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.08em}
+  .step h3{margin:0;font-size:15px}
+  .step p{margin:0;font-size:13px;color:var(--muted)}
+  .code{font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--surface-2);
+    border:1px solid var(--line);border-radius:7px;padding:7px 9px;overflow-x:auto;white-space:nowrap}
+  .code .lbl{color:var(--faint)}
+  footer{margin-top:clamp(40px,6vw,68px);border-top:1px solid var(--line);padding-top:20px;
+    font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+  footer b{color:var(--ink);font-weight:600}
+  a{color:var(--accent)}
+  @media (prefers-reduced-motion:no-preference){.card,.step{transition:transform .15s ease}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="dot"></span> Kairos · Signed Forecast Oracle · ETHOnline 2026</div>
+    <h1>El único agente que firma <em>por qué dice que no</em>.</h1>
+    <p class="lede">Los agentes de trading te dicen qué apostar. Kairos toma una decisión
+      <strong>disciplinada</strong> —calibración bayesiana, sizing de Kelly, gate de drawdown—,
+      la <strong>firma</strong>, cobra por ella vía <strong>x402</strong> y la <strong>ancla on-chain</strong>.
+      Comprás una decisión auditada, no la opinión de un LLM.</p>
+    <div class="meta-row">
+      <span class="chip">EIP-191 signed</span>
+      <span class="chip">x402 · USDC</span>
+      <span class="chip">EAS · Base Sepolia (84532)</span>
+      <span class="chip">$0 capital — merit + bounty</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-label">Tres decisiones reales del motor — misma disciplina, distinto veredicto</div>
+    <div class="cards">
+
+      <div class="card">
+        <span class="verdict v-bet">BET · $200</span>
+        <q>¿El candidato X gana la elección?</q>
+        <div class="stats">
+          <div class="stat"><div class="k">Creencia</div><div class="v">72%</div></div>
+          <div class="stat"><div class="k">Edge</div><div class="v edge">+24%</div></div>
+          <div class="stat"><div class="k">Apuesta</div><div class="v">$200</div></div>
+        </div>
+        <ul class="trace">
+          <li>P(H|E) = 72.0% ± 5.0%</li>
+          <li>YES ask 48% → edge +24.0%</li>
+          <li>EV neto 20.85% · Kelly f*=0.427 → α-safe 0.107</li>
+          <li class="punch bet">RIESGO OK — todos los gates pasan → BET</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="verdict v-pass">PASS · $0</span>
+        <q>¿La Fed sube tasas la próxima reunión?</q>
+        <div class="stats">
+          <div class="stat"><div class="k">Creencia</div><div class="v">51%</div></div>
+          <div class="stat"><div class="k">Edge</div><div class="v">+1%</div></div>
+          <div class="stat"><div class="k">Apuesta</div><div class="v size-0">$0</div></div>
+        </div>
+        <ul class="trace">
+          <li>P(H|E) = 51.0% ± 22.0%</li>
+          <li>YES ask 50% → edge +1.0%</li>
+          <li class="punch pass">EV neto no-positivo → PASS (sin apuesta)</li>
+        </ul>
+      </div>
+
+      <div class="card hero-card">
+        <span class="verdict v-blocked">BLOCKED · $0</span>
+        <q>¿BTC +20% este mes? <span style="color:var(--faint);font-weight:500">(mercado ilíquido)</span></q>
+        <div class="stats">
+          <div class="stat"><div class="k">Creencia</div><div class="v">64%</div></div>
+          <div class="stat"><div class="k">Edge</div><div class="v edge">+36%</div></div>
+          <div class="stat"><div class="k">Apuesta</div><div class="v size-0">$0</div></div>
+        </div>
+        <ul class="trace">
+          <li>P(H|E) = 64.0% ± 7.0%</li>
+          <li>YES ask 28% → edge <b>+36.0%</b></li>
+          <li>Kelly quería $200…</li>
+          <li class="punch blocked">RIESGO BLOQUEA: vol 24h $700 &lt; mín $10,000</li>
+        </ul>
+      </div>
+
+    </div>
+    <p class="pitchline" style="margin-top:20px">Un edge de <b>+36%</b> que casi cualquier bot tomaría — y Kairos lo <b>rechaza</b>, firmado, porque el mercado es ilíquido.</p>
+  </section>
+
+  <section>
+    <div class="sec-label">La cadena de prueba — de la decisión al registro on-chain</div>
+    <div class="flow">
+      <div class="step">
+        <div class="n">01 · FIRMA</div>
+        <h3>Razonamiento firmado</h3>
+        <p>El digest keccak256 de la decisión, firmado por la wallet (EIP-191). Verificable sin gas ni red.</p>
+        <div class="code"><span class="lbl">digest </span>0x0e5458e4a4026e5f…468792c4</div>
+      </div>
+      <div class="step">
+        <div class="n">02 · PAGO</div>
+        <h3>x402 · pay-per-forecast</h3>
+        <p>El cliente pide → <b>402 Payment Required</b> → paga un micro-fee en USDC → recibe el forecast firmado.</p>
+        <div class="code"><span class="lbl">402 </span>USDC 0.05 → <span class="lbl">200 OK</span> signed</div>
+      </div>
+      <div class="step">
+        <div class="n">03 · ON-CHAIN</div>
+        <h3>Attestation en EAS</h3>
+        <p>El digest se ancla vía EAS en Base Sepolia — el <b>state-change on-chain</b> que exigen los tracks de oráculo.</p>
+        <div class="code"><span class="lbl">EAS.attest </span>0xf17325e7… <span class="lbl">· chain 84532</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div><b>Honesto (RBHM):</b> demo en dry-run + testnet. La demanda x402 real todavía es fina — esto es
+      <b>demo + bounty</b>, no una línea de ingreso. El edge de mercado no es el pitch; la <b>disciplina verificable</b> sí.</div>
+    <div><b>Kairos</b> — agente de forecasting disciplinado · compitiendo hoy en Metaculus · ETHOnline 4–16 sep 2026.</div>
+  </footer>
+</div>
