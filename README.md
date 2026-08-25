@@ -1,59 +1,64 @@
 # Kairos Oracle 🔮
 
-**An AI forecasting agent that signs its calibrated bets on-chain and sells them via x402.**
+**A disciplined AI forecasting agent — competing live in real tournaments, with signed, verifiable decisions.**
 
-> *The only forecasting agent that shows you — signed and verifiable — **why** it says no.*
-
-Built for **ETHOnline 2026**. Battle-tested: forecasts live in Metaculus AI tournaments today.
+> *Baseline (pre-hackathon): what actually existed before the ETHOnline 2026 build window.
+> The Hedera integrations are the new work — see the "Before / After" section added in September.*
 
 ---
 
-## The thesis
+## What this is (honest baseline, July 2026)
 
-Every "AI trading agent" tells you *what* to bet. Kairos produces a **disciplined, auditable decision** —
-and proves it. For any market or question it returns an explicit **BET / PASS / BLOCKED** with a
-human-readable reasoning trace, then **signs** the decision (EIP-712) and **anchors** an attestation
-**on-chain** (EAS). You buy an audited decision with verifiable risk discipline, not an opaque LLM opinion.
+Kairos is a forecasting agent that competes **live, fully automated, with $0 capital at risk** in real
+forecasting tournaments — today in Metaculus's **AI-bot tournament ($50K, bot-only)** and the Metaculus Cup.
 
-The moment that matters: watch it **refuse a +36% edge** because the market is too illiquid — signed,
-on-chain, impossible to fake.
+For any question it produces an explicit **BET / PASS / BLOCKED** decision with a human-readable
+reasoning trace — and **signs** it (EIP-191), so the provenance of every forecast is verifiable
+off-chain by anyone, cross-language (`agentproof/` + `verify.js`).
+
+The moment that matters: it **refuses good-looking edges** when they fail its risk discipline —
+and it shows the refusal, signed.
 
 ## How it works
 
 ```
-signals → Bayesian posterior (σ) → EV/σ/GL gates → Kelly-α sizing → risk envelope
-        → BET / PASS / BLOCKED (with reasoning trace)
-        → EIP-712 signature → x402 pay-per-forecast → EAS on-chain attestation
+question → multi-source research (GDELT news + Wikipedia base rates)
+        → committee of cross-lab LLMs (aggregated by log-odds pooling)
+        → Platt calibration against resolved outcomes
+        → risk discipline (fractional Kelly + hard drawdown / daily-loss gates)
+        → BET / PASS / BLOCKED (reasoning trace) → EIP-191 signature → verifiable receipt
 ```
 
-- **Committee of 5 cross-lab LLMs** — Gemini 2.5 Pro/Flash, Gemini 3 Flash, Claude Sonnet 5,
-  + a GLM tie-breaker — aggregated by **log-odds pooling with outlier trimming**.
+- **Committee of cross-lab LLMs** — Google Gemini lineages + models via OpenRouter + a GLM
+  tie-breaker on disagreement — aggregated by log-odds pooling.
 - **Multi-source research** — GDELT news + Wikipedia base rates, injected per question.
-- **Calibration** — Platt scaling against resolved outcomes (decoupled, tournament-native).
-- **Risk discipline** — fractional Kelly + hard drawdown / daily-loss gates → the BLOCKED that others lack.
-- **Verifiable** — keccak256 digest + EIP-712 signature, anchored via the Ethereum Attestation Service.
-- **Monetized** — x402 (HTTP-402): a client pays a USDC micro-fee and receives the signed forecast.
+- **Calibration** — Platt scaling fitted out-of-sample (cross-validated guard) on resolved outcomes.
+- **Risk discipline** — fractional Kelly + hard drawdown / daily-loss gates → the BLOCKED that
+  LLM-YOLO agents don't have.
+- **Verifiable** — every forecast is signed (EIP-191) and machine-checkable with a 5-line verifier.
 
-## Quickstart
+## What is NOT here (deliberately)
 
-```bash
-kairos agent demo          # the reasoning trace: BET / PASS / BLOCKED, live
-kairos agent x402-demo     # full flow: decision → sign → x402 pay → on-chain attestation
-kairos agent x402-serve    # real HTTP paywall: GET /forecast → 402 → pay → 200 signed
-kairos agent anchor        # anchor the signed decision on-chain (EAS, Base Sepolia)
-```
+- **No on-chain anchoring yet** — the Hedera Consensus Service integration is the *new work* of
+  the hackathon window (September 2026), not part of this baseline.
+- **No x402 monetization** — an earlier draft pitch mentioned pay-per-forecast; it was never
+  deployed. The agent competes in judged arenas, it does not sell calls.
+- **No EAS attestations** — same story: drafted, never shipped.
 
-## Status
+## Track record (verifiable, not claimed)
 
-- 🏆 Competing live in **Metaculus** — AI Benchmark (FutureEval, $50K) + Metaculus Cup.
-- 🔮 **ETHOnline 2026** hacker — hack Sept 4-16.
-- 🛡️ Fail-closed by design ("Doctrine B"): any error degrades to neutral, never crashes.
+- Competes **today** in Metaculus's AI-bot tournament and Cup — the public leaderboard shows its
+  official peer score, updated by the platform (we show it even when it's negative — that's the
+  point of a reputation you can *check*).
+- Every submitted forecast leaves a signed receipt; the system's weekly self-score against public
+  data (FRED/Cboe) is in the repo's `data/series_scores.jsonl`.
 
-## Partner tech
+## License
 
-Ethereum Attestation Service (EAS) · x402 · EVM (Base) · eth-account (EIP-712).
-Sponsor-specific integrations land when ETHOnline bounties are announced (late August).
+MIT — see `LICENSE`.
 
 ---
 
-*Not financial advice. Testnet demo. Secrets live only in a gitignored `.env` — never committed.*
+*This README documents the state of the project **before** the ETHOnline 2026 build window
+(4–16 September 2026). The Hedera integrations (HCS anchoring + Schedule Service execution) are
+the new work, documented separately with the same before/after separation the Continuity track asks for.*
