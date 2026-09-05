@@ -1,97 +1,132 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kairos — Signed Forecast Oracle on Hedera</title>
-<style>:root{
-  --bg:#08090a; --bg2:#0c0d0f; --surface:#101113; --surface2:#151619; --line:#222428;
-  --line2:#2a2d32; --ink:#e8eaed; --muted:#9aa0a8; --faint:#666b72;
-  --accent:#533afd; --accent2:#7389ff; --accent-dim:rgba(83,58,253,.14);
-  --bet:#2ecc71; --pass:#d8a33a; --blocked:#e5484d;
-  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Berkeley+Mono&display=swap');
+:root{
+  --void:#08090a; --carbon:#0f1011; --obsidian:#161718; --graphite:#23252a; --smoke:#383b3f; --ash:#62666d;
+  --ink:#f7f8f8; --muted:#9ca3af; --faint:#6b7280;
+  --indigo:#533afd; --indigo-h:#7389ff; --indigo-dim:rgba(83,58,253,.13);
+  --bet:#33c57e; --pass:#d9a441; --blocked:#e5484d;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'Berkeley Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
-a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
-.wrap{max-width:1120px;margin:0 auto;padding:44px 24px 88px}
-header{border-bottom:1px solid var(--line);padding-bottom:36px}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:9px}
-.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--bet);box-shadow:0 0 0 3px rgba(46,204,113,.15)}
-h1{font-size:clamp(30px,5.4vw,52px);line-height:1.05;letter-spacing:-.03em;margin:18px 0 14px;font-weight:640;max-width:18ch}
-h1 em{font-style:normal;color:var(--ink);border-bottom:2px solid var(--accent)}
-.lede{font-size:clamp(15.5px,1.9vw,18px);color:var(--muted);max-width:66ch;margin:0}
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:32px}
-.metric{background:var(--surface);padding:18px 20px}
-.metric .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-.metric .v{font-family:var(--mono);font-size:27px;font-weight:600;margin-top:7px;letter-spacing:-.02em}
-.metric .s{font-size:12px;color:var(--muted);margin-top:3px}
-.metric.hl .v{color:var(--accent2)}
-section{margin-top:56px}
-.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
-.sec-head .n{font-family:var(--mono);font-size:12px;color:var(--accent2);letter-spacing:.05em}
-.sec-head h2{font-size:18px;font-weight:620;margin:0;letter-spacing:-.01em}
-.pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.pstep{background:var(--surface);padding:18px 18px}
-.pstep .st{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.14em;text-transform:uppercase}
-.pstep h3{margin:8px 0 5px;font-size:14px;font-weight:600}
-.pstep p{margin:0;font-size:12.5px;color:var(--muted)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:13px}
-.card.hero{border-color:rgba(229,72,77,.45)}
-.verdict{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:600;font-size:12.5px;letter-spacing:.06em;padding:5px 11px;border-radius:7px;width:fit-content}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{background:var(--void);color:var(--ink);font-family:var(--sans);line-height:1.6;font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px 96px}
+a{color:var(--indigo-h);text-decoration:none;transition:color .15s}
+a:hover{color:#9aa6ff}
+
+/* ---- Header ---- */
+header{padding:64px 0 40px;border-bottom:1px solid var(--graphite)}
+.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--bet);box-shadow:0 0 0 4px rgba(51,197,126,.14)}
+h1{margin:22px 0 18px;font-size:clamp(34px,5.5vw,56px);line-height:1.04;letter-spacing:-.035em;font-weight:700;max-width:15ch;color:var(--ink)}
+h1 .accent{color:var(--indigo-h);border-bottom:3px solid var(--indigo);padding-bottom:2px}
+.lede{font-size:clamp(16px,1.8vw,18.5px);color:var(--muted);max-width:64ch;font-weight:400}
+.lede b{color:var(--ink);font-weight:600}
+
+/* ---- Metrics strip ---- */
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);margin-top:36px;border:1px solid var(--graphite);border-radius:10px;overflow:hidden;background:var(--carbon)}
+.metric{padding:20px 22px;border-right:1px solid var(--graphite)}
+.metric:last-child{border-right:none}
+.metric .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash)}
+.metric .v{font-family:var(--mono);font-size:26px;font-weight:500;margin-top:8px;letter-spacing:-.02em;color:var(--ink)}
+.metric .v.accent{color:var(--indigo-h)}
+.metric .s{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+@media(max-width:760px){.metrics{grid-template-columns:repeat(2,1fr)}.metric{border-bottom:1px solid var(--graphite)}.metric:nth-child(even){border-right:none}}
+
+/* ---- Section scaffolding ---- */
+section{margin-top:72px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+.sec-head .n{font-family:var(--mono);font-size:12px;color:var(--indigo-h);letter-spacing:.05em}
+.sec-head h2{font-size:20px;font-weight:650;letter-spacing:-.02em;color:var(--ink)}
+
+/* ---- Pipeline ---- */
+.pipe{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--graphite);border-radius:10px;overflow:hidden;background:var(--carbon)}
+.pstep{padding:20px 20px 22px;border-right:1px solid var(--graphite)}
+.pstep:last-child{border-right:none}
+.pstep .st{font-family:var(--mono);font-size:10px;color:var(--ash);letter-spacing:.14em;text-transform:uppercase}
+.pstep h3{font-size:14px;font-weight:600;margin:9px 0 6px;color:var(--ink)}
+.pstep p{font-size:12.5px;color:var(--muted);line-height:1.55}
+@media(max-width:760px){.pipe{grid-template-columns:1fr}.pstep{border-right:none;border-bottom:1px solid var(--graphite)}}
+
+/* ---- Decision cards ---- */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:var(--carbon);border:1px solid var(--graphite);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:14px;transition:border-color .15s}
+.card:hover{border-color:var(--smoke)}
+.card.hero{border-color:rgba(229,72,77,.4)}
+.verdict{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.07em;padding:5px 11px;border-radius:6px;width:fit-content}
 .verdict::before{content:"";width:7px;height:7px;border-radius:2px;background:currentColor}
-.v-bet{color:var(--bet);background:rgba(46,204,113,.12)}
-.v-pass{color:var(--pass);background:rgba(216,163,58,.12)}
-.v-blocked{color:var(--blocked);background:rgba(229,72,77,.12)}
-.card q{quotes:none;font-weight:600;font-size:15px;display:block;margin:0;letter-spacing:-.01em}
-.trace{list-style:none;margin:0;padding:0;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column}
-.trace li{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding:3px 0 3px 18px;position:relative}
-.trace li::before{content:"›";position:absolute;left:2px;color:var(--faint)}
-.trace li.punch{color:var(--ink);font-weight:600}
+.v-bet{color:var(--bet);background:rgba(51,197,126,.11)}
+.v-pass{color:var(--pass);background:rgba(217,164,65,.11)}
+.v-blocked{color:var(--blocked);background:rgba(229,72,77,.11)}
+.card q{quotes:none;font-weight:600;font-size:15px;color:var(--ink);display:block;line-height:1.4}
+.trace{list-style:none;padding:0;border-top:1px solid var(--graphite);padding-top:13px;display:flex;flex-direction:column;gap:2px}
+.trace li{font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0 3px 16px;position:relative;line-height:1.5}
+.trace li::before{content:"›";position:absolute;left:1px;color:var(--ash)}
+.trace li.punch{color:var(--ink);font-weight:500}
 .trace li.punch.bet{color:var(--bet)}.trace li.punch.pass{color:var(--pass)}.trace li.punch.blocked{color:var(--blocked)}
-.punchline{margin-top:16px;color:var(--muted);font-size:15px}
+.punchline{margin-top:18px;font-size:15.5px;color:var(--muted)}
 .punchline b{color:var(--blocked)}
 .punchline b.w{color:var(--ink)}
-.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}
-.pcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:9px}
-.pcard h3{margin:0;font-size:14.5px;font-weight:600}
-.pcard p{margin:0;font-size:12.5px;color:var(--muted)}
-.pcard .id{font-family:var(--mono);font-size:12px;color:var(--accent2);word-break:break-all}
-.verify{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
-.verify .t{font-weight:600;font-size:14.5px}
-.verify .d{margin:5px 0 0;font-size:12.5px;color:var(--muted)}
-.verify button{font-family:var(--mono);font-size:12px;letter-spacing:.03em;border:1px solid var(--accent);color:var(--accent2);background:transparent;border-radius:7px;padding:9px 16px;cursor:pointer;margin-top:12px}
-.verify button:hover{background:var(--accent-dim)}
-.verify .status{font-family:var(--mono);font-size:12px;margin-top:11px;min-height:18px}
-.verify .out{font-family:var(--mono);font-size:11.5px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:10px;white-space:pre-wrap;display:none;color:var(--muted)}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+
+/* ---- Proof cards ---- */
+.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pcard{background:var(--carbon);border:1px solid var(--graphite);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s}
+.pcard:hover{border-color:var(--smoke)}
+.pcard h3{font-size:14.5px;font-weight:600;color:var(--ink)}
+.pcard p{font-size:12.5px;color:var(--muted);line-height:1.55;flex:1}
+.pcard .id{font-family:var(--mono);font-size:12px;color:var(--indigo-h)}
+.pcard .go{font-family:var(--mono);font-size:12px;color:var(--ash)}
+.pcard .go:hover{color:var(--indigo-h)}
+@media(max-width:760px){.proof{grid-template-columns:1fr}}
+
+/* ---- Verify ---- */
+.verify{margin-top:16px;background:var(--obsidian);border:1px solid var(--graphite);border-radius:10px;padding:24px}
+.verify .t{font-weight:600;font-size:15px;color:var(--ink)}
+.verify .d{margin-top:5px;font-size:13px;color:var(--muted)}
+.verify button{font-family:var(--mono);font-size:12px;letter-spacing:.03em;border:1px solid var(--indigo);color:var(--indigo-h);background:transparent;border-radius:6px;padding:10px 18px;cursor:pointer;margin-top:14px;transition:background .15s}
+.verify button:hover{background:var(--indigo-dim)}
+.verify .status{font-family:var(--mono);font-size:12px;margin-top:12px;min-height:18px}
+.verify .out{font-family:var(--mono);font-size:11.5px;background:var(--void);border:1px solid var(--graphite);border-radius:8px;padding:14px;margin-top:12px;white-space:pre-wrap;display:none;color:var(--muted);line-height:1.6}
 .ok{color:var(--bet)}.err{color:var(--blocked)}
-.coverage{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px}
-.cov{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px}
-.cov .t{font-size:12.5px;font-weight:600}
-.cov .p{font-size:11px;color:var(--faint);font-family:var(--mono)}
-.cov .bar{height:6px;background:var(--bg2);border-radius:99px;margin:10px 0;overflow:hidden}
-.cov .bar i{display:block;height:100%;background:var(--accent2);border-radius:99px}
-.cov .pct{font-family:var(--mono);font-size:13px;color:var(--accent2)}
-table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-th,td{border-bottom:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top}
-th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);background:var(--surface2)}
+
+/* ---- Coverage ---- */
+.coverage{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cov{background:var(--carbon);border:1px solid var(--graphite);border-radius:10px;padding:16px 18px}
+.cov .t{font-size:13px;font-weight:600;color:var(--ink)}
+.cov .p{font-family:var(--mono);font-size:11px;color:var(--ash);margin-top:1px}
+.cov .bar{height:5px;background:var(--obsidian);border-radius:99px;margin:12px 0 10px;overflow:hidden}
+.cov .bar i{display:block;height:100%;background:var(--indigo);border-radius:99px}
+.cov .pct{font-family:var(--mono);font-size:13px;color:var(--indigo-h)}
+@media(max-width:760px){.coverage{grid-template-columns:1fr 1fr}}
+
+/* ---- Table ---- */
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--carbon);border:1px solid var(--graphite);border-radius:10px;overflow:hidden}
+th,td{border-bottom:1px solid var(--graphite);padding:14px 16px;text-align:left;vertical-align:top}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);background:var(--obsidian);font-weight:500}
 tr:last-child td{border-bottom:none}
-td .mono{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.note{margin-top:28px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-size:13px;color:var(--muted)}
-footer{margin-top:56px;border-top:1px solid var(--line);padding-top:22px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+td .mono{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ---- Note + footer ---- */
+.note{margin-top:24px;background:var(--obsidian);border:1px solid var(--graphite);border-radius:10px;padding:18px 20px;font-size:13px;color:var(--muted);line-height:1.6}
+.note b{color:var(--ink);font-weight:600}
+footer{margin-top:72px;border-top:1px solid var(--graphite);padding-top:24px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:5px}
 footer b{color:var(--ink)}
-.dim{color:var(--faint)}</style></head><body><div class="wrap">
+.dim{color:var(--ash)}</style></head><body><div class="wrap">
 
 <header>
   <div class="eyebrow"><span class="dot"></span> Kairos · Live · ETHOnline 2026 · Continuity</div>
-  <h1>Forecasts you can <em>verify</em>, not trust.</h1>
-  <p class="lede">Kairos is a disciplined forecasting agent running live in real tournaments. Every decision is
-    <b>BET / PASS / BLOCKED</b> with a reasoning trace, signed (EIP-191), and anchored to Hedera Consensus
-    Service — so "we said it before the close" is a fact on a mirror node, not a promise. The next action runs
-    on the <b>Schedule Service</b>: the network executes it. No keeper, no cron, no "the laptop was asleep".</p>
+  <h1>Forecasts you can <span class="accent">verify</span>, not trust.</h1>
+  <p class="lede">A disciplined forecasting agent running live in real tournaments. Every decision is
+  <b>BET / PASS / BLOCKED</b> with a reasoning trace, signed (EIP-191), and anchored to Hedera Consensus
+  Service — so "we said it before the close" is a fact on a mirror node, not a promise. The next action runs
+  on the <b>Schedule Service</b>: the network executes it. No keeper, no cron.</p>
 
   <div class="metrics">
-    <div class="metric hl"><div class="k">Forecasts</div><div class="v">10,537</div><div class="s">333 unique questions</div></div>
+    <div class="metric"><div class="k">Forecasts</div><div class="v accent">10,537</div><div class="s">333 unique questions</div></div>
     <div class="metric"><div class="k">Tournaments</div><div class="v">5</div><div class="s">AIB $50K · Cup · POTUS · ACX · Midterms</div></div>
     <div class="metric"><div class="k">Committee</div><div class="v">5</div><div class="s">cross-lab models, log-odds pooled</div></div>
     <div class="metric"><div class="k">Calibration</div><div class="v">a=1.24</div><div class="s">Platt, out-of-sample, guarded</div></div>
@@ -102,10 +137,10 @@ footer b{color:var(--ink)}
 <section>
   <div class="sec-head"><span class="n">01</span><h2>Decision pipeline</h2></div>
   <div class="pipe">
-    <div class="pstep"><div class="st">Input</div><h3>Research</h3><p>GDELT news + Wikipedia base rates + market price, per question.</p></div>
+    <div class="pstep"><div class="st">Input</div><h3>Research</h3><p>GDELT news, Wikipedia base rates, market price — per question.</p></div>
     <div class="pstep"><div class="st">Model</div><h3>Committee</h3><p>5 cross-lab LLMs, log-odds pooling with outlier trimming.</p></div>
-    <div class="pstep"><div class="st">Calibrate</div><h3>Platt scaling</h3><p>Out-of-sample fit on resolved outcomes; guard blocks drift.</p></div>
-    <div class="pstep"><div class="st">Risk</div><h3>Discipline</h3><p>Fractional Kelly + hard drawdown / daily-loss gates. Can refuse.</p></div>
+    <div class="pstep"><div class="st">Calibrate</div><h3>Platt</h3><p>Out-of-sample fit on resolved outcomes; guard blocks drift.</p></div>
+    <div class="pstep"><div class="st">Risk</div><h3>Discipline</h3><p>Fractional Kelly + hard drawdown / daily-loss gates.</p></div>
     <div class="pstep"><div class="st">Prove</div><h3>Sign + anchor</h3><p>EIP-191 signature → HCS anchor → next action scheduled on-chain.</p></div>
   </div>
 </section>
@@ -126,13 +161,13 @@ footer b{color:var(--ink)}
 <section>
   <div class="sec-head"><span class="n">03</span><h2>Proof on Hedera</h2></div>
   <div class="proof">
-    <div class="pcard"><h3>Forecast anchors</h3><p>Digests submitted to HCS before questions close — ordered and timestamped by the network.</p><div class="id">topic 0.0.10213059</div><a href="https://hashscan.io/testnet/topic/0.0.10213059" target="_blank">hashscan →</a></div>
-    <div class="pcard"><h3>No-keeper execution</h3><p>The next action is a scheduled transaction the network executes when signatures complete.</p><div class="id">schedule 0.0.10114149</div><a href="https://hashscan.io/testnet/schedule/0.0.10114149" target="_blank">hashscan →</a></div>
-    <div class="pcard"><h3>Receipt on HFS</h3><p>Full receipt on Hedera File Service; its SHA-256 anchored back to the topic.</p><div class="id">file 0.0.10215927</div><a href="https://hashscan.io/testnet/file/0.0.10215927" target="_blank">hashscan →</a></div>
+    <div class="pcard"><h3>Forecast anchors</h3><p>Digests submitted to HCS before questions close — ordered and timestamped by the network.</p><div class="id">topic 0.0.10213059</div><a class="go" href="https://hashscan.io/testnet/topic/0.0.10213059" target="_blank">hashscan →</a></div>
+    <div class="pcard"><h3>No-keeper execution</h3><p>The next action is a scheduled transaction the network executes when signatures complete.</p><div class="id">schedule 0.0.10114149</div><a class="go" href="https://hashscan.io/testnet/schedule/0.0.10114149" target="_blank">hashscan →</a></div>
+    <div class="pcard"><h3>Receipt on HFS</h3><p>Full receipt on Hedera File Service; its SHA-256 anchored back to the topic.</p><div class="id">file 0.0.10215927</div><a class="go" href="https://hashscan.io/testnet/file/0.0.10215927" target="_blank">hashscan →</a></div>
   </div>
   <div class="verify">
     <div class="t">Verify on-chain — no auth</div>
-    <p class="d">Reads the Hedera testnet mirror node: the <span class="mono" style="font-family:var(--mono)">kairos-oracle</span> topic and its anchored messages.</p>
+    <p class="d">Reads the Hedera testnet mirror node: the <span style="font-family:var(--mono)">kairos-oracle</span> topic and its anchored messages.</p>
     <button onclick="verifyLive()">Run verification →</button>
     <div class="status" id="vstatus"></div>
     <div class="out" id="vout"></div>
