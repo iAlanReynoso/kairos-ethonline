@@ -93,8 +93,21 @@ umbral marca la decisión como pendiente de confirmación en dispositivo). `wall
 instalado y verificado (subcomando `ring`: init/encrypt/decrypt/keys/destroy, LKRP). El enroll del
 dispositivo físico se hace con el hardware presente (before/after documentado en el repo).
 
-**Feedback:** `npx skills add ledgerhq/agent-skills` + `npm i -g @ledgerhq/wallet-cli` install clean;
-the DMK skills are instruction files an agent can wire up directly (good fit for spec-driven builds).
+**Track eligibility (from the source, developers.ledger.com/ethonline):** Track 01 "AI Agents x
+Ledger" says "Start something new during the event" and "the track decides where you start from" →
+it is the From-Scratch pool; as a Continuity project we compete in **Track 02 Continuity ($1,500)**,
+whose ask we match literally (put a device confirmation in front of an action that previously had
+none; make wallet-cli ring the key backend). We state this rather than guessing.
+
+**Feedback (Ledger judges DX as much as code — "Every submission has to include feedback"):**
+- Install experience: `npx skills add ledgerhq/agent-skills` + `npm i -g @ledgerhq/wallet-cli` is
+  clean and fast (seconds). The CLI's JSON-first output is genuinely agent-friendly (no scraping).
+- Gap found: `wallet-cli ring keys` fails with a generic "not initialized" error and no pointer to
+  the `ring init` flow; a one-line hint (and an `init` dry-run mode) would save integrators a detour.
+- Suggestion ("time-saver" for future integrators): a headless `ring init --key-id <name>` flag that
+  derives the ring key without interactive prompts would make CI enrollment scriptable end-to-end.
+- DMK skills are plain instruction files — ideal for spec-driven agent builds; we wired ours into the
+  decision engine the same day.
 
 ---
 
