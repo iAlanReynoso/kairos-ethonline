@@ -20,9 +20,13 @@ Hedera File Service (receipt storage). SDK: `hiero-sdk-python` v0.2.10. Testnet.
 
 **Code path:** `src/kairos/hedera/` (anchor.py · schedule.py · hfs.py · keys.py).
 
-**x402 (this window's new work):** pay-per-forecast endpoint returning HTTP 402 → HBAR payment →
-forecast. Audit trail in HCS, recurring access via scheduled transactions. (The prior `src/kairos/pay/`
-module was USDC/Base — being ported to HBAR/Hedera.)
+**x402 (this window's new work — LIVE):** pay-per-forecast endpoint returning HTTP 402 → HBAR payment →
+forecast. Audit trail in HCS, recurring access via scheduled transactions.
+
+Verified live (5-sep): `GET /v1/forecast` without payment → **402** with HBAR requirements
+(`asset: HBAR, network: hedera-testnet, payTo: 0.0.10107589, settlement: Blocky402`); with
+`X-PAYMENT` → **200** + signed forecast + **HCS payment audit** (topic 0.0.10374210, hashscan
+clickeable). Code: `src/kairos/pay/hedera_x402.py`.
 
 **Feedback (asked by the form):**
 - `hiero-sdk-python` v0.2.10: solid native-services coverage, but **`PrivateKey.from_string` with a raw
@@ -42,7 +46,7 @@ Messari Standardized Subgraphs (one shared schema across protocols), queried via
   for crypto/protocol questions, in the research stage of the pipeline.
 - A/B measured: does adding live Graph data improve calibration? (Platt/peer score on matched questions.)
 
-**Code path:** `src/kairos/agent/research.py` (research stage) + a Graph adapter (this window).
+**Code path:** `src/kairos/graph_evidence.py` (queries Messari Standardized Subgraphs; live API-key wiring in window — never mocked).
 
 **Feedback:** Standardized Subgraphs are the right abstraction — one query spans many protocols. The
 continuity requirement "consume live data from a Graph provider" is satisfied via Subgraph Studio API key
@@ -62,7 +66,7 @@ high-risk actions, with **device confirmation in front of irreversible decisions
 - Matches Ledger's Continuity ask: *"put a device confirmation in front of an action your product already
   performs"* and *"make wallet-cli ring the key backend for the .env files your repo already has."*
 
-**Code path:** this window's build — a signer adapter behind the risk-gate decision.
+**Code path:** `src/kairos/ledger_trust.py` (requires_device_confirmation on the BLOCKED/high-risk path; wallet-cli ring wiring in window).
 
 **Feedback:** `npx skills add ledgerhq/agent-skills` + `npm i -g @ledgerhq/wallet-cli` install clean;
 the DMK skills are instruction files an agent can wire up directly (good fit for spec-driven builds).
