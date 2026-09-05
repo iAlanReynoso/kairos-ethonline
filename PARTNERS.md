@@ -55,9 +55,12 @@ Messari Standardized Subgraphs (one shared schema across protocols), queried via
   (TVL ≈ $136.3B, daily volume ≈ $368M on the most recent snapshot) — real data, not fixtures. The
   stage feeds the committee prompt and the response's `fuentes` field reports `thegraph` only
   when the evidence was actually used.
-- A/B measured: does adding live Graph data improve calibration? Two identical ForecastBench
-  harvests (same questions, same committee) with the evidence ON vs OFF, Brier compared. Result
-  posted here when the run completes.
+- A/B measured (5-sep, n=12 matched questions, same committee, same seed): **Brier 0.2169 with the
+  evidence vs 0.2002 without (+0.0168, market reference 0.1736)**. Honest read in
+  [docs/graph_ab_result_2026-09-05.md](docs/graph_ab_result_2026-09-05.md) — on this small,
+  mostly non-crypto sample the evidence did not help, and we publish the negative rather than hide
+  it. What ships is the paired measurement infrastructure (and a domain-filtered re-run planned
+  post-hackathon). Raw rows: [on](docs/graph_ab_on.json) / [off](docs/graph_ab_off.json).
 
 **Code path:** `kairos/graph_evidence.py` — queries GraphQL LIVE contra la gateway de Subgraph
 Studio con los subgraphs Messari en la red descentralizada (graph IDs del deployment.json oficial:
