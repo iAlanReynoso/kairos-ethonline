@@ -217,7 +217,7 @@ function ask(){
     res.classList.add('show');
     go.disabled=false;
   })
-  .catch(function(e){st.textContent='No se pudo conectar al motor: '+e.message;go.disabled=false;});
+  .catch(function(e){st.textContent='No se pudo conectar al motor: '+e.message+'. Reintenta en unos segundos (el servicio se reinicia solo si cayó).';go.disabled=false;});
 }
 (function(){var els=document.querySelectorAll('.reveal');var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.12});els.forEach(function(el){io.observe(el);});})();
 (function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=e.target;i.style.width=i.getAttribute('data-w');io.unobserve(i);}});},{threshold:.3});document.querySelectorAll('.cov .bar i').forEach(function(b){b.style.width='0';io.observe(b);});})();</script></body></html>
