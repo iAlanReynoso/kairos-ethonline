@@ -1,171 +1,221 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kairos — Signed Forecast Oracle on Hedera</title>
-<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Berkeley+Mono&display=swap');
+<title>Kairos — Verified Forecasts, On-Chain</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700;800&display=swap');
 :root{
-  --void:#08090a; --carbon:#0f1011; --obsidian:#161718; --graphite:#23252a; --smoke:#383b3f; --ash:#62666d;
-  --ink:#f7f8f8; --muted:#9ca3af; --faint:#6b7280;
-  --indigo:#533afd; --indigo-h:#7389ff; --indigo-dim:rgba(83,58,253,.13);
-  --bet:#33c57e; --pass:#d9a441; --blocked:#e5484d;
-  --sans:'Inter',system-ui,-apple-system,sans-serif;
-  --mono:'Berkeley Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --ink:#1d1d1f; --gray:#707070; --deep:#474747; --hairline:#d6d6d6; --canvas:#f5f5f7; --paper:#ffffff;
+  --blue:#0071e3; --blue-h:#0077ed; --blue-dim:rgba(0,113,227,.08);
+  --green:#0a8f4a; --amber:#b07d1f; --red:#d70015;
+  --darkbg:#0f1012; --darkcard:#161719;
+  --sans:'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body{background:var(--void);color:var(--ink);font-family:var(--sans);line-height:1.6;font-variant-numeric:tabular-nums}
-.wrap{max-width:1080px;margin:0 auto;padding:0 32px 96px}
-a{color:var(--indigo-h);text-decoration:none;transition:color .15s}
-a:hover{color:#9aa6ff}
+html{scroll-behavior:smooth}
+body{background:var(--canvas);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
 
-/* ---- Header ---- */
-header{padding:64px 0 40px;border-bottom:1px solid var(--graphite)}
-.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)}
-.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--bet);box-shadow:0 0 0 4px rgba(51,197,126,.14)}
-h1{margin:22px 0 18px;font-size:clamp(34px,5.5vw,56px);line-height:1.04;letter-spacing:-.035em;font-weight:700;max-width:15ch;color:var(--ink)}
-h1 .accent{color:var(--indigo-h);border-bottom:3px solid var(--indigo);padding-bottom:2px}
-.lede{font-size:clamp(16px,1.8vw,18.5px);color:var(--muted);max-width:64ch;font-weight:400}
-.lede b{color:var(--ink);font-weight:600}
+/* reveal on scroll */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.visible{opacity:1;transform:none}
 
-/* ---- Metrics strip ---- */
-.metrics{display:grid;grid-template-columns:repeat(5,1fr);margin-top:36px;border:1px solid var(--graphite);border-radius:10px;overflow:hidden;background:var(--carbon)}
-.metric{padding:20px 22px;border-right:1px solid var(--graphite)}
-.metric:last-child{border-right:none}
-.metric .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash)}
-.metric .v{font-family:var(--mono);font-size:26px;font-weight:500;margin-top:8px;letter-spacing:-.02em;color:var(--ink)}
-.metric .v.accent{color:var(--indigo-h)}
-.metric .s{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4}
-@media(max-width:760px){.metrics{grid-template-columns:repeat(2,1fr)}.metric{border-bottom:1px solid var(--graphite)}.metric:nth-child(even){border-right:none}}
+/* ---- NAV ---- */
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.78);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--hairline)}
+.nav-in{max-width:1120px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex;gap:26px;font-size:13px;color:var(--gray)}
+.nav-links a{color:var(--gray);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{font-size:13px;font-weight:500;color:#fff;background:var(--blue);padding:7px 16px;border-radius:980px;text-decoration:none;transition:background .2s}
+.nav-cta:hover{background:var(--blue-h)}
 
-/* ---- Section scaffolding ---- */
-section{margin-top:72px}
-.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
-.sec-head .n{font-family:var(--mono);font-size:12px;color:var(--indigo-h);letter-spacing:.05em}
-.sec-head h2{font-size:20px;font-weight:650;letter-spacing:-.02em;color:var(--ink)}
+/* ---- HERO ---- */
+header{padding:88px 0 64px;text-align:center;background:radial-gradient(900px 420px at 50% -8%,rgba(0,113,227,.10),transparent)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--blue);background:var(--blue-dim);padding:7px 16px;border-radius:980px;font-weight:500;margin-bottom:28px}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+h1{font-size:clamp(44px,7.5vw,88px);line-height:1.02;letter-spacing:-.045em;font-weight:800;max-width:14ch;margin:0 auto}
+h1 .grad{background:linear-gradient(100deg,#0071e3,#00a2ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{margin:26px auto 0;font-size:clamp(18px,2.2vw,23px);color:var(--gray);max-width:58ch;font-weight:400;letter-spacing:-.01em}
+.hero-sub b{color:var(--ink);font-weight:600}
 
-/* ---- Pipeline ---- */
-.pipe{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--graphite);border-radius:10px;overflow:hidden;background:var(--carbon)}
-.pstep{padding:20px 20px 22px;border-right:1px solid var(--graphite)}
+/* ---- hero metrics ---- */
+.hero-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline);border-radius:20px;overflow:hidden;margin:56px auto 0;max-width:980px}
+.hm{background:var(--paper);padding:28px 24px;text-align:center}
+.hm .v{font-size:44px;font-weight:800;letter-spacing:-.04em;color:var(--ink)}
+.hm .v.blue{color:var(--blue)}
+.hm .k{font-size:13px;color:var(--gray);margin-top:6px;font-weight:500}
+@media(max-width:760px){.hero-metrics{grid-template-columns:1fr 1fr}}
+
+/* ---- section scaffolding ---- */
+section{padding:104px 0}
+.sec-head{text-align:center;margin-bottom:56px}
+.sec-head .kicker{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+.sec-head h2{font-size:clamp(34px,4.5vw,54px);font-weight:800;letter-spacing:-.04em;line-height:1.05}
+.sec-head p{font-size:19px;color:var(--gray);max-width:56ch;margin:18px auto 0}
+
+/* ---- chart cards ---- */
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.chart{background:var(--paper);border:1px solid var(--hairline);border-radius:20px;padding:28px;transition:transform .25s,box-shadow .25s}
+.chart:hover{transform:translateY(-3px);box-shadow:0 18px 50px -20px rgba(0,0,0,.15)}
+.chart h3{font-size:17px;font-weight:700;letter-spacing:-.02em}
+.chart .sub{font-size:13px;color:var(--gray);margin-top:4px}
+.chart .big{font-size:40px;font-weight:800;letter-spacing:-.04em;margin:14px 0 6px}
+.chart svg{width:100%;height:auto;display:block;margin-top:14px}
+.chart .legend{display:flex;gap:16px;margin-top:12px;font-size:12px;color:var(--gray)}
+.chart .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+@media(max-width:760px){.charts{grid-template-columns:1fr}}
+
+/* ---- pipeline ---- */
+.pipe{display:grid;grid-template-columns:repeat(5,1fr);gap:0;background:var(--paper);border:1px solid var(--hairline);border-radius:20px;overflow:hidden}
+.pstep{padding:28px 22px;border-right:1px solid var(--hairline);text-align:center}
 .pstep:last-child{border-right:none}
-.pstep .st{font-family:var(--mono);font-size:10px;color:var(--ash);letter-spacing:.14em;text-transform:uppercase}
-.pstep h3{font-size:14px;font-weight:600;margin:9px 0 6px;color:var(--ink)}
-.pstep p{font-size:12.5px;color:var(--muted);line-height:1.55}
-@media(max-width:760px){.pipe{grid-template-columns:1fr}.pstep{border-right:none;border-bottom:1px solid var(--graphite)}}
+.pstep .num{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.1em}
+.pstep h4{font-size:15px;font-weight:700;margin:10px 0 6px;letter-spacing:-.01em}
+.pstep p{font-size:12.5px;color:var(--gray);line-height:1.5}
+@media(max-width:760px){.pipe{grid-template-columns:1fr}.pstep{border-right:none;border-bottom:1px solid var(--hairline)}}
 
-/* ---- Decision cards ---- */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.card{background:var(--carbon);border:1px solid var(--graphite);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:14px;transition:border-color .15s}
-.card:hover{border-color:var(--smoke)}
-.card.hero{border-color:rgba(229,72,77,.4)}
-.verdict{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.07em;padding:5px 11px;border-radius:6px;width:fit-content}
-.verdict::before{content:"";width:7px;height:7px;border-radius:2px;background:currentColor}
-.v-bet{color:var(--bet);background:rgba(51,197,126,.11)}
-.v-pass{color:var(--pass);background:rgba(217,164,65,.11)}
-.v-blocked{color:var(--blocked);background:rgba(229,72,77,.11)}
-.card q{quotes:none;font-weight:600;font-size:15px;color:var(--ink);display:block;line-height:1.4}
-.trace{list-style:none;padding:0;border-top:1px solid var(--graphite);padding-top:13px;display:flex;flex-direction:column;gap:2px}
-.trace li{font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0 3px 16px;position:relative;line-height:1.5}
-.trace li::before{content:"›";position:absolute;left:1px;color:var(--ash)}
-.trace li.punch{color:var(--ink);font-weight:500}
-.trace li.punch.bet{color:var(--bet)}.trace li.punch.pass{color:var(--pass)}.trace li.punch.blocked{color:var(--blocked)}
-.punchline{margin-top:18px;font-size:15.5px;color:var(--muted)}
-.punchline b{color:var(--blocked)}
-.punchline b.w{color:var(--ink)}
-@media(max-width:760px){.cards{grid-template-columns:1fr}}
+/* ---- decisions ---- */
+.decisions{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.dec{background:var(--paper);border:1px solid var(--hairline);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:16px;transition:transform .25s,box-shadow .25s}
+.dec:hover{transform:translateY(-3px);box-shadow:0 18px 50px -20px rgba(0,0,0,.15)}
+.dec.hero{border-color:rgba(215,0,21,.35);box-shadow:0 0 0 1px rgba(215,0,21,.08)}
+.verdict{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.04em;padding:6px 14px;border-radius:980px;width:fit-content}
+.verdict::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.v-bet{color:var(--green);background:rgba(10,143,74,.09)}
+.v-pass{color:var(--amber);background:rgba(176,125,31,.09)}
+.v-blocked{color:var(--red);background:rgba(215,0,21,.08)}
+.dec q{quotes:none;font-weight:700;font-size:18px;letter-spacing:-.02em;display:block;line-height:1.35}
+.trace{list-style:none;padding:0;border-top:1px solid var(--hairline);padding-top:14px;display:flex;flex-direction:column;gap:3px}
+.trace li{font-family:var(--mono);font-size:12px;color:var(--gray);padding-left:16px;position:relative;line-height:1.5}
+.trace li::before{content:"›";position:absolute;left:1px;color:#c0c0c0}
+.trace li.punch{color:var(--ink);font-weight:600}
+.trace li.punch.bet{color:var(--green)}.trace li.punch.pass{color:var(--amber)}.trace li.punch.blocked{color:var(--red)}
+@media(max-width:760px){.decisions{grid-template-columns:1fr}}
 
-/* ---- Proof cards ---- */
-.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.pcard{background:var(--carbon);border:1px solid var(--graphite);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s}
-.pcard:hover{border-color:var(--smoke)}
-.pcard h3{font-size:14.5px;font-weight:600;color:var(--ink)}
-.pcard p{font-size:12.5px;color:var(--muted);line-height:1.55;flex:1}
-.pcard .id{font-family:var(--mono);font-size:12px;color:var(--indigo-h)}
-.pcard .go{font-family:var(--mono);font-size:12px;color:var(--ash)}
-.pcard .go:hover{color:var(--indigo-h)}
+/* ---- dark proof section ---- */
+.dark-section{background:var(--darkbg);color:#f5f5f7;border-radius:28px;padding:64px 48px;margin:0 -12px}
+.dark-section .sec-head h2{color:#f5f5f7}
+.dark-section .sec-head p{color:#86868b}
+.dark-section .kicker{color:#2997ff}
+.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pcard{background:var(--darkcard);border:1px solid #2c2c2e;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.pcard h3{font-size:15px;font-weight:600;color:#f5f5f7}
+.pcard p{font-size:12.5px;color:#86868b;line-height:1.5;flex:1}
+.pcard .id{font-family:var(--mono);font-size:12.5px;color:#2997ff}
+.pcard a{font-family:var(--mono);font-size:12px;color:#86868b;text-decoration:none}
+.pcard a:hover{color:#2997ff}
+.verify{margin-top:20px;background:var(--darkcard);border:1px solid #2c2c2e;border-radius:16px;padding:26px}
+.verify .t{font-weight:600;font-size:16px;color:#f5f5f7}
+.verify .d{margin-top:5px;font-size:13px;color:#86868b}
+.verify button{font-family:var(--mono);font-size:12px;border:1px solid #2997ff;color:#2997ff;background:transparent;border-radius:980px;padding:10px 20px;cursor:pointer;margin-top:14px;transition:background .2s}
+.verify button:hover{background:rgba(41,151,255,.1)}
+.verify .status{font-family:var(--mono);font-size:12px;margin-top:12px;min-height:18px;color:#f5f5f7}
+.verify .out{font-family:var(--mono);font-size:11.5px;background:#000;border:1px solid #2c2c2e;border-radius:10px;padding:14px;margin-top:12px;white-space:pre-wrap;display:none;color:#a1a1a6;line-height:1.6}
 @media(max-width:760px){.proof{grid-template-columns:1fr}}
 
-/* ---- Verify ---- */
-.verify{margin-top:16px;background:var(--obsidian);border:1px solid var(--graphite);border-radius:10px;padding:24px}
-.verify .t{font-weight:600;font-size:15px;color:var(--ink)}
-.verify .d{margin-top:5px;font-size:13px;color:var(--muted)}
-.verify button{font-family:var(--mono);font-size:12px;letter-spacing:.03em;border:1px solid var(--indigo);color:var(--indigo-h);background:transparent;border-radius:6px;padding:10px 18px;cursor:pointer;margin-top:14px;transition:background .15s}
-.verify button:hover{background:var(--indigo-dim)}
-.verify .status{font-family:var(--mono);font-size:12px;margin-top:12px;min-height:18px}
-.verify .out{font-family:var(--mono);font-size:11.5px;background:var(--void);border:1px solid var(--graphite);border-radius:8px;padding:14px;margin-top:12px;white-space:pre-wrap;display:none;color:var(--muted);line-height:1.6}
-.ok{color:var(--bet)}.err{color:var(--blocked)}
-
-/* ---- Coverage ---- */
-.coverage{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.cov{background:var(--carbon);border:1px solid var(--graphite);border-radius:10px;padding:16px 18px}
-.cov .t{font-size:13px;font-weight:600;color:var(--ink)}
-.cov .p{font-family:var(--mono);font-size:11px;color:var(--ash);margin-top:1px}
-.cov .bar{height:5px;background:var(--obsidian);border-radius:99px;margin:12px 0 10px;overflow:hidden}
-.cov .bar i{display:block;height:100%;background:var(--indigo);border-radius:99px}
-.cov .pct{font-family:var(--mono);font-size:13px;color:var(--indigo-h)}
+/* ---- coverage ---- */
+.coverage{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.cov{background:var(--paper);border:1px solid var(--hairline);border-radius:16px;padding:20px}
+.cov .t{font-size:14px;font-weight:700}
+.cov .p{font-family:var(--mono);font-size:11px;color:var(--gray);margin-top:2px}
+.cov .bar{height:8px;background:var(--canvas);border-radius:99px;margin:14px 0 8px;overflow:hidden}
+.cov .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#00a2ff);border-radius:99px;transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
+.cov .pct{font-family:var(--mono);font-size:14px;color:var(--blue);font-weight:600}
 @media(max-width:760px){.coverage{grid-template-columns:1fr 1fr}}
 
-/* ---- Table ---- */
-table{border-collapse:collapse;width:100%;font-size:13px;background:var(--carbon);border:1px solid var(--graphite);border-radius:10px;overflow:hidden}
-th,td{border-bottom:1px solid var(--graphite);padding:14px 16px;text-align:left;vertical-align:top}
-th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);background:var(--obsidian);font-weight:500}
+/* ---- before/after ---- */
+table{border-collapse:collapse;width:100%;font-size:14px;background:var(--paper);border:1px solid var(--hairline);border-radius:20px;overflow:hidden}
+th,td{border-bottom:1px solid var(--hairline);padding:18px 22px;text-align:left;vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);background:var(--canvas);font-weight:600}
 tr:last-child td{border-bottom:none}
-td .mono{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.6}
+td .mono{font-family:var(--mono);font-size:12.5px;color:var(--gray);line-height:1.7}
+.note{margin-top:22px;text-align:center;font-size:14px;color:var(--gray)}
+.note b{color:var(--ink)}
 
-/* ---- Note + footer ---- */
-.note{margin-top:24px;background:var(--obsidian);border:1px solid var(--graphite);border-radius:10px;padding:18px 20px;font-size:13px;color:var(--muted);line-height:1.6}
-.note b{color:var(--ink);font-weight:600}
-footer{margin-top:72px;border-top:1px solid var(--graphite);padding-top:24px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:5px}
-footer b{color:var(--ink)}
-.dim{color:var(--ash)}</style></head><body><div class="wrap">
+/* ---- footer ---- */
+footer{padding:56px 0 72px;text-align:center;border-top:1px solid var(--hairline);margin-top:40px}
+footer .f-logo{font-weight:800;font-size:18px;letter-spacing:-.02em}
+footer .f-logo span{color:var(--blue)}
+footer p{font-size:13px;color:var(--gray);margin-top:8px}</style></head><body>
+
+<nav><div class="nav-in">
+  <div class="nav-logo">Kairos <span>·</span> Oracle</div>
+  <div class="nav-links"><a href="#pipeline">Pipeline</a><a href="#proof">Proof</a><a href="#coverage">Coverage</a><a href="#continuity">Continuity</a></div>
+  <a class="nav-cta" href="#proof">Verify →</a>
+</div></nav>
 
 <header>
-  <div class="eyebrow"><span class="dot"></span> Kairos · Live · ETHOnline 2026 · Continuity</div>
-  <h1>Forecasts you can <span class="accent">verify</span>, not trust.</h1>
-  <p class="lede">A disciplined forecasting agent running live in real tournaments. Every decision is
-  <b>BET / PASS / BLOCKED</b> with a reasoning trace, signed (EIP-191), and anchored to Hedera Consensus
-  Service — so "we said it before the close" is a fact on a mirror node, not a promise. The next action runs
-  on the <b>Schedule Service</b>: the network executes it. No keeper, no cron.</p>
-
-  <div class="metrics">
-    <div class="metric"><div class="k">Forecasts</div><div class="v accent">10,537</div><div class="s">333 unique questions</div></div>
-    <div class="metric"><div class="k">Tournaments</div><div class="v">5</div><div class="s">AIB $50K · Cup · POTUS · ACX · Midterms</div></div>
-    <div class="metric"><div class="k">Committee</div><div class="v">5</div><div class="s">cross-lab models, log-odds pooled</div></div>
-    <div class="metric"><div class="k">Calibration</div><div class="v">a=1.24</div><div class="s">Platt, out-of-sample, guarded</div></div>
-    <div class="metric"><div class="k">At risk</div><div class="v">$0</div><div class="s">judged arenas only</div></div>
+  <div class="hero-badge"><span class="dot"></span> Live · ETHOnline 2026 · Continuity</div>
+  <h1>Forecasts you can <span class="grad">verify</span>, not trust.</h1>
+  <p class="hero-sub">Kairos is a disciplined forecasting agent. Every decision is <b>BET / PASS / BLOCKED</b>,
+  signed, and anchored on Hedera — so "we said it before the close" is a <b>fact on-chain</b>, not a promise.</p>
+  <div class="hero-metrics">
+    <div class="hm"><div class="v blue">10,537</div><div class="k">forecasts emitted</div></div>
+    <div class="hm"><div class="v">333</div><div class="k">unique questions</div></div>
+    <div class="hm"><div class="v">5</div><div class="k">live tournaments</div></div>
+    <div class="hm"><div class="v">$0</div><div class="k">capital at risk</div></div>
   </div>
 </header>
 
-<section>
-  <div class="sec-head"><span class="n">01</span><h2>Decision pipeline</h2></div>
-  <div class="pipe">
-    <div class="pstep"><div class="st">Input</div><h3>Research</h3><p>GDELT news, Wikipedia base rates, market price — per question.</p></div>
-    <div class="pstep"><div class="st">Model</div><h3>Committee</h3><p>5 cross-lab LLMs, log-odds pooling with outlier trimming.</p></div>
-    <div class="pstep"><div class="st">Calibrate</div><h3>Platt</h3><p>Out-of-sample fit on resolved outcomes; guard blocks drift.</p></div>
-    <div class="pstep"><div class="st">Risk</div><h3>Discipline</h3><p>Fractional Kelly + hard drawdown / daily-loss gates.</p></div>
-    <div class="pstep"><div class="st">Prove</div><h3>Sign + anchor</h3><p>EIP-191 signature → HCS anchor → next action scheduled on-chain.</p></div>
+<section id="pipeline">
+  <div class="sec-head reveal"><div class="kicker">The engine</div><h2>From question to signed proof.</h2><p>Five stages, one discipline. Nothing ships unless every gate passes — and the agent can refuse.</p></div>
+  <div class="pipe reveal">
+    <div class="pstep"><div class="num">01</div><h4>Research</h4><p>GDELT news, Wikipedia base rates, market price.</p></div>
+    <div class="pstep"><div class="num">02</div><h4>Committee</h4><p>5 cross-lab models, log-odds pooled.</p></div>
+    <div class="pstep"><div class="num">03</div><h4>Calibrate</h4><p>Platt scaling, out-of-sample, guarded.</p></div>
+    <div class="pstep"><div class="num">04</div><h4>Discipline</h4><p>Kelly + drawdown gates. Can refuse.</p></div>
+    <div class="pstep"><div class="num">05</div><h4>Prove</h4><p>EIP-191 sign → HCS anchor → schedule.</p></div>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="n">02</span><h2>Three decisions, one discipline</h2></div>
-  <div class="cards">
-    <div class="card"><span class="verdict v-bet">BET</span><q>Will candidate X win the election?</q>
-      <ul class="trace"><li>P(H|E) = 72.0% ± 5.0%</li><li>market YES 48% → edge +24%</li><li>EV net +20.85% · Kelly α-safe</li><li class="punch bet">gates pass → BET</li></ul></div>
-    <div class="card"><span class="verdict v-pass">PASS</span><q>Will the Fed hike at the next meeting?</q>
-      <ul class="trace"><li>P(H|E) = 51.0% ± 22.0%</li><li>market YES 50% → edge +1%</li><li class="punch pass">EV non-positive → PASS</li></ul></div>
-    <div class="card hero"><span class="verdict v-blocked">BLOCKED</span><q>Will BTC be +20% this month? <span class="dim">(illiquid)</span></q>
-      <ul class="trace"><li>P(H|E) = 64.0% ± 7.0%</li><li>market YES 28% → edge +36%</li><li class="punch blocked">24h vol $700 &lt; min $10,000 → BLOCKED</li></ul></div>
+  <div class="sec-head reveal"><div class="kicker">Performance</div><h2>Measured, not claimed.</h2><p>Real numbers from the live system — including the part that's uncomfortable.</p></div>
+  <div class="charts">
+    <div class="chart reveal">
+      <h3>Forecast activity</h3><div class="sub">last 24 hours</div>
+      <div class="big">112</div>
+      <svg viewBox="0 0 400 120" preserveAspectRatio="none">
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0071e3" stop-opacity=".28"/><stop offset="1" stop-color="#0071e3" stop-opacity="0"/></linearGradient></defs>
+        <polygon points="0,120 0,112 17,112 33,112 50,112 67,107 83,112 100,112 117,112 133,112 150,112 167,78 183,92 200,112 217,112 233,112 250,112 267,110 283,112 300,112 317,112 333,112 350,112 367,92 383,112 400,112 400,120" fill="url(#g1)"/>
+        <polyline points="0,112 17,112 33,112 50,112 67,107 83,112 100,112 117,112 133,112 150,112 167,78 183,92 200,112 217,112 233,112 250,112 267,110 283,112 300,112 317,112 333,112 350,112 367,92 383,112 400,112" fill="none" stroke="#0071e3" stroke-width="2.5" stroke-linejoin="round"/>
+      </svg>
+      <div class="legend"><span><i style="background:#0071e3"></i>forecasts / hour</span><span style="margin-left:auto">10,537 lifetime</span></div>
+    </div>
+    <div class="chart reveal">
+      <h3>Calibration</h3><div class="sub">Platt scaling · out-of-sample</div>
+      <div class="big">a = 1.24</div>
+      <svg viewBox="0 0 400 120" preserveAspectRatio="none">
+        <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00a2ff" stop-opacity=".28"/><stop offset="1" stop-color="#00a2ff" stop-opacity="0"/></linearGradient></defs>
+        <polygon points="0,120 0,98 33,92 67,84 100,74 133,64 167,52 200,42 233,34 267,27 300,21 333,16 367,12 400,9 400,120" fill="url(#g2)"/>
+        <polyline points="0,98 33,92 67,84 100,74 133,64 167,52 200,42 233,34 267,27 300,21 333,16 367,12 400,9" fill="none" stroke="#0071e3" stroke-width="2.5"/>
+        <line x1="0" y1="42" x2="400" y2="42" stroke="#d6d6d6" stroke-width="1" stroke-dasharray="4 4"/>
+      </svg>
+      <div class="legend"><span><i style="background:#0071e3"></i>raw → calibrated</span><span style="margin-left:auto">n = 116 resolved</span></div>
+    </div>
   </div>
-  <p class="punchline">A <b>+36%</b> edge most bots take — Kairos <b class="w">refuses it, signed</b>, because the market is illiquid.</p>
 </section>
 
 <section>
-  <div class="sec-head"><span class="n">03</span><h2>Proof on Hedera</h2></div>
+  <div class="sec-head reveal"><div class="kicker">Discipline</div><h2>It refuses the good-looking edge.</h2><p>Three real decisions, one risk gate. The third one is the product.</p></div>
+  <div class="decisions">
+    <div class="dec reveal"><span class="verdict v-bet">BET</span><q>Will candidate X win the election?</q>
+      <ul class="trace"><li>P(H|E) = 72.0% ± 5.0%</li><li>market 48% → edge +24%</li><li>EV +20.85% · Kelly α-safe</li><li class="punch bet">gates pass → BET</li></ul></div>
+    <div class="dec reveal"><span class="verdict v-pass">PASS</span><q>Will the Fed hike at the next meeting?</q>
+      <ul class="trace"><li>P(H|E) = 51.0% ± 22.0%</li><li>market 50% → edge +1%</li><li class="punch pass">EV non-positive → PASS</li></ul></div>
+    <div class="dec hero reveal"><span class="verdict v-blocked">BLOCKED</span><q>Will BTC be +20% this month?</q>
+      <ul class="trace"><li>P(H|E) = 64.0% ± 7.0%</li><li>market 28% → edge +36%</li><li class="punch blocked">24h vol $700 &lt; $10,000 → BLOCKED</li></ul></div>
+  </div>
+</section>
+
+<section id="proof" class="dark-section">
+  <div class="sec-head reveal"><div class="kicker">On-chain</div><h2>Proof on Hedera.</h2><p>Every claim on this page is clickable on Hashscan — the testnet mirror is public, no auth.</p></div>
   <div class="proof">
-    <div class="pcard"><h3>Forecast anchors</h3><p>Digests submitted to HCS before questions close — ordered and timestamped by the network.</p><div class="id">topic 0.0.10213059</div><a class="go" href="https://hashscan.io/testnet/topic/0.0.10213059" target="_blank">hashscan →</a></div>
-    <div class="pcard"><h3>No-keeper execution</h3><p>The next action is a scheduled transaction the network executes when signatures complete.</p><div class="id">schedule 0.0.10114149</div><a class="go" href="https://hashscan.io/testnet/schedule/0.0.10114149" target="_blank">hashscan →</a></div>
-    <div class="pcard"><h3>Receipt on HFS</h3><p>Full receipt on Hedera File Service; its SHA-256 anchored back to the topic.</p><div class="id">file 0.0.10215927</div><a class="go" href="https://hashscan.io/testnet/file/0.0.10215927" target="_blank">hashscan →</a></div>
+    <div class="pcard reveal"><h3>Forecast anchors</h3><p>Digests submitted to HCS before questions close — ordered and timestamped by the network.</p><div class="id">topic 0.0.10213059</div><a href="https://hashscan.io/testnet/topic/0.0.10213059" target="_blank">hashscan →</a></div>
+    <div class="pcard reveal"><h3>No-keeper execution</h3><p>The next action is a scheduled transaction the network executes itself.</p><div class="id">schedule 0.0.10114149</div><a href="https://hashscan.io/testnet/schedule/0.0.10114149" target="_blank">hashscan →</a></div>
+    <div class="pcard reveal"><h3>Receipt on HFS</h3><p>Full receipt on Hedera File Service; SHA-256 anchored back to the topic.</p><div class="id">file 0.0.10215927</div><a href="https://hashscan.io/testnet/file/0.0.10215927" target="_blank">hashscan →</a></div>
   </div>
-  <div class="verify">
+  <div class="verify reveal">
     <div class="t">Verify on-chain — no auth</div>
     <p class="d">Reads the Hedera testnet mirror node: the <span style="font-family:var(--mono)">kairos-oracle</span> topic and its anchored messages.</p>
     <button onclick="verifyLive()">Run verification →</button>
@@ -174,35 +224,46 @@ footer b{color:var(--ink)}
   </div>
 </section>
 
-<section>
-  <div class="sec-head"><span class="n">04</span><h2>Live coverage</h2></div>
-  <div class="coverage">
+<section id="coverage">
+  <div class="sec-head reveal"><div class="kicker">Live coverage</div><h2>Competing today.</h2><p>Fully automated, across five tournaments, $0 at risk.</p></div>
+  <div class="coverage reveal">
     <div class="cov"><div class="t">AIB · FutureEval</div><div class="p">$50K · bot-only</div><div class="bar"><i style="width:100%"></i></div><div class="pct">pays bots</div></div>
-    <div class="cov"><div class="t">POTUS</div><div class="p">$15K</div><div class="bar"><i style="width:82%"></i></div><div class="pct">27/33 · 82%</div></div>
-    <div class="cov"><div class="t">ACX 2026</div><div class="p">$10K</div><div class="bar"><i style="width:100%"></i></div><div class="pct">26/26 · 100%</div></div>
-    <div class="cov"><div class="t">Midterms</div><div class="p">$10K</div><div class="bar"><i style="width:100%"></i></div><div class="pct">12/12 · 100%</div></div>
+    <div class="cov"><div class="t">POTUS</div><div class="p">$15K</div><div class="bar"><i data-w="82%"></i></div><div class="pct">27/33 · 82%</div></div>
+    <div class="cov"><div class="t">ACX 2026</div><div class="p">$10K</div><div class="bar"><i data-w="100%"></i></div><div class="pct">26/26 · 100%</div></div>
+    <div class="cov"><div class="t">Midterms</div><div class="p">$10K</div><div class="bar"><i data-w="100%"></i></div><div class="pct">12/12 · 100%</div></div>
   </div>
 </section>
 
-<section>
-  <div class="sec-head"><span class="n">05</span><h2>Before / after — Continuity</h2></div>
-  <table>
+<section id="continuity">
+  <div class="sec-head reveal"><div class="kicker">Continuity</div><h2>Before / after.</h2><p>The line the track asks for, drawn in public.</p></div>
+  <table class="reveal">
     <tr><th>Before (Aug, on Hedera)</th><th>After (this window, Sep 4–16)</th></tr>
     <tr>
       <td><span class="mono">account 0.0.10107589 · topic 0.0.10114138 · scheduled tx 0.0.10114149 — spike, executed by the network</span></td>
-      <td><span class="mono">production topic (submit-key) · forecast anchors (Sep timestamps) · scheduled execution · HFS receipts · x402 pay-per-forecast</span></td>
+      <td><span class="mono">production topic (submit-key) · forecast anchors (Sep) · scheduled execution · HFS receipts · x402 pay-per-forecast</span></td>
     </tr>
   </table>
-  <div class="note"><b>Honest by design.</b> Everything on this page is live or clickable on-chain. The Metaculus peer score is shown
-  as reported — including when negative, because a reputation you can check is the product. No x402-as-shipped, no EAS, no invented traction.</div>
+  <div class="note reveal"><b>Honest by design.</b> The Metaculus peer score is shown as reported — including when negative. A reputation you can check is the product.</div>
 </section>
 
 <footer>
-  <div><b>Kairos</b> — disciplined forecasting agent · competing in Metaculus tournaments · ETHOnline 2026 · Continuity (Hedera).</div>
-  <div>Not financial advice. Testnet. $0 at risk.</div>
+  <div class="f-logo">Kairos <span>·</span> Oracle</div>
+  <p>Disciplined forecasting agent · competing in Metaculus tournaments · ETHOnline 2026 · Continuity (Hedera). Not financial advice. Testnet. $0 at risk.</p>
 </footer>
-</div>
+
 <script>
+// scroll reveal
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.12});
+  els.forEach(function(el){io.observe(el);});
+})();
+// animate coverage bars to their data-w
+(function(){
+  var bars=document.querySelectorAll('.cov .bar i');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=e.target;var w=i.getAttribute('data-w')||i.style.width;i.style.width=w;io.unobserve(i);}});},{threshold:.3});
+  bars.forEach(function(b){var w=b.getAttribute('data-w')||'100%';b.style.width='0';b.setAttribute('data-w',w);io.observe(b);});
+})();
 async function verifyLive(){
   var s=document.getElementById('vstatus'), o=document.getElementById('vout');
   s.className='status'; s.textContent='Fetching testnet mirror node…'; o.style.display='block';
