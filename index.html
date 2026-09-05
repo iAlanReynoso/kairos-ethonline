@@ -46,6 +46,11 @@ h1 .grad{background:linear-gradient(100deg,#0071e3,#00a2ff);-webkit-background-c
 .vote .bar{flex:1;height:6px;background:var(--canvas);border-radius:99px;overflow:hidden}
 .vote .bar i{display:block;height:100%;background:var(--blue);border-radius:99px;transition:width .8s}
 .status-line{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--gray);min-height:18px}
+.factors{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+.factor{font-size:13px;color:var(--gray);padding-left:16px;position:relative}
+.factor::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;background:var(--blue)}
+.sources{margin-top:12px;display:flex;gap:6px;flex-wrap:wrap}
+.source{font-family:var(--mono);font-size:11px;color:var(--blue);background:var(--blue-dim);padding:3px 10px;border-radius:980px}
 section{padding:96px 0}
 .sec-head{text-align:center;margin-bottom:52px}
 .sec-head .kicker{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
@@ -117,7 +122,9 @@ footer p{font-size:13px;color:var(--gray);margin-top:8px}</style></head><body>
       <div class="result" id="result">
         <div class="row1"><span class="verdict-pill" id="vp">PASS</span><span class="p" id="pp">—<span>%</span></span></div>
         <div class="summary" id="sum"></div>
+        <div class="factors" id="factors"></div>
         <div class="votes" id="votes"></div>
+        <div class="sources" id="sources"></div>
       </div>
     </div>
   </div>
@@ -189,9 +196,13 @@ function ask(){
     vp.className='verdict-pill '+(d.verdict==='BET'?'vb-bet':d.verdict==='PASS'?'vb-pass':'vb-blocked');
     pp.innerHTML=(Math.round(d.p*100))+'<span>%</span>';
     sum.textContent=d.summary||'';
+    var fhtml='';(d.factors||[]).forEach(function(f){fhtml+='<div class="factor">'+f+'</div>';});
+    document.getElementById('factors').innerHTML=fhtml;
     var html='';
     (d.votos||[]).forEach(function(v){html+='<div class="vote"><span>'+v.modelo+'</span><div class="bar"><i style="width:'+Math.round(v.p_yes*100)+'%"></i></div><span>'+Math.round(v.p_yes*100)+'%</span></div>';});
     votes.innerHTML=html;
+    var shtml='';(d.fuentes||[]).forEach(function(s){shtml+='<span class="source">'+s+'</span>';});
+    document.getElementById('sources').innerHTML=shtml;
     res.classList.add('show');
     go.disabled=false;
   })
