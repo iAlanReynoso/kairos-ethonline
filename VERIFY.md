@@ -44,6 +44,22 @@ Every forecast is signed (EIP-191). The verifier is a 5-line script: `node verif
 (The `agentproof/` verifier and a sample receipt ship with the full source; this repo carries the
 submission UI and the proof pointers.)
 
+## 5. Live public endpoint (x402, no auth)
+
+The service is live. Anyone can check it in two commands:
+
+```bash
+# service health
+curl -s https://ialanreynoso.tail3a9281.ts.net/health
+
+# ask for a forecast → HTTP 402 with x402 requirements (payTo 0.0.10107589, 100000 tinybar HBAR)
+curl -s https://ialanreynoso.tail3a9281.ts.net/v1/forecast?question=Will%20ETH%20hit%2010k%20in%202026%3F
+```
+
+Paying triggers the real flow: the receipt is verified, the forecast is produced (research →
+4-model committee → Platt → Kelly → EIP-191 signature) and the payment audit trail is written to
+HCS. Sample of a real response (unpaid local run): [`docs/live_forecast_2026-09-05.json`](docs/live_forecast_2026-09-05.json).
+
 ---
 
 *This file documents exactly what a judge can click or run. If something here 404s or fails, it's a bug — not an excuse.*
