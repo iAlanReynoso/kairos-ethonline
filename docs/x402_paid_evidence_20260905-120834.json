@@ -1,0 +1,86 @@
+{
+  "ts": "2026-09-05T18:08:34.018037+00:00",
+  "question": "Will BTC close above 150k in 2026?",
+  "resource": "/v1/forecast?question=Will%20BTC%20close%20above%20150k%20in%202026%3F",
+  "amount_tinybar": 100000,
+  "payTo": "0.0.10107589",
+  "payer": "0.0.10381472",
+  "facilitator": "https://api.testnet.blocky402.com",
+  "verify": {
+    "isValid": true,
+    "payer": "0.0.10381472"
+  },
+  "result": {
+    "p": 0.0765,
+    "sigma": 0.0734,
+    "decision_p": 0.1489,
+    "verdict": "BLOCKED",
+    "side": "BUY_NO",
+    "edge": 0.3511,
+    "size_usd": 0.0,
+    "summary": "Given the low probability of BTC reaching 150k from current levels, even with a year of runway, this is unlikely.",
+    "factors": [
+      "ensemble n=3/3: p=7.7%",
+      "Related market for 100k year-end is only 19%",
+      "150k is far above all-time high (~73k)",
+      "No recent news catalyst",
+      "Extraordinary price target defaults to No"
+    ],
+    "fuentes": [
+      "gdelt",
+      "wiki",
+      "market"
+    ],
+    "reasoning": [
+      "Creencia externa: P(H|E) = 7.7% ± 7.3%",
+      "  · ensemble n=3/3: p=7.7%",
+      "  · Related market for 100k year-end is only 19%",
+      "  · 150k is far above all-time high (~73k)",
+      "  · No recent news catalyst",
+      "Mercado YES ask = 50.0%  →  edge = -42.3%",
+      "Anclaje al mercado (w=0.30): P 7.7% → 14.9%",
+      "Lado BUY_NO: p=85.1% @ 50.0% → edge +35.1%  (yes_bid=50.0%)",
+      "EV neto 31.96% · GL 0.70 · Kelly f*=0.682 → α-safe 0.171 → f_final 0.100 = $200.00",
+      "RIESGO BLOQUEA: market 24h vol $0 < min $10,000"
+    ],
+    "signature": {
+      "signer": "0x87a49Abd203BFBB12Ec3761A9E3697fe406e5Ee3",
+      "digest": "0x2a1bb24bfbd28fe63e218311b147286c3733285f0eb30cf50d99c95c6f011870"
+    },
+    "anchor": {
+      "status": "22",
+      "topic_id": "0.0.10374210",
+      "sha256": "15201f0f3968e08f863743f81d3ee4927ec5b0344f48e8b83aa2865e22de9ce9",
+      "mirror_url": "https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10374210/messages",
+      "hashscan": "https://hashscan.io/testnet/topic/0.0.10374210"
+    },
+    "votos": [
+      {
+        "modelo": "deepseek:deepseek-v4-flash",
+        "p_yes": 0.08
+      },
+      {
+        "modelo": "openrouter:anthropic/claude-opus-5",
+        "p_yes": 0.07
+      },
+      {
+        "modelo": "openrouter:openai/gpt-5.6-luna",
+        "p_yes": 0.08
+      }
+    ],
+    "x402_settled_via": "Blocky402",
+    "payment": {
+      "payer": "0.0.10381472",
+      "amount_tinybar": "100000",
+      "settlement_tx": "0.0.7162784@1788631598.935375690"
+    },
+    "payment_audit": {
+      "status": "22",
+      "topic_id": "0.0.10374210",
+      "sha256": "a717e93f844f4e76e8f35ac6dfcd1ebd365595b89b2819698eccef2f68f265ff",
+      "mirror_url": "https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10374210/messages",
+      "hashscan": "https://hashscan.io/testnet/transaction/0.0.7162784@1788631598.935375690",
+      "settlement_tx": "0.0.7162784@1788631598.935375690"
+    }
+  }
+}

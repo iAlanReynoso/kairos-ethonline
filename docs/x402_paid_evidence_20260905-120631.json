@@ -1,0 +1,85 @@
+{
+  "ts": "2026-09-05T18:06:31.793390+00:00",
+  "question": "Will ETH hit 10k in 2026?",
+  "resource": "/v1/forecast?question=Will%20ETH%20hit%2010k%20in%202026%3F",
+  "amount_tinybar": 100000,
+  "payTo": "0.0.10107589",
+  "payer": "0.0.10381472",
+  "facilitator": "https://api.testnet.blocky402.com",
+  "verify": {
+    "isValid": true,
+    "payer": "0.0.10381472"
+  },
+  "result": {
+    "p": 0.1304,
+    "sigma": 0.134,
+    "decision_p": 0.2094,
+    "verdict": "PASS",
+    "side": "BUY_NO",
+    "edge": 0.2906,
+    "size_usd": 0.0,
+    "summary": "Given no relevant news and typical asset growth rates, a 10k ETH in 2026 is possible but unlikely.",
+    "factors": [
+      "ensemble n=3/3: p=13.0%",
+      "Base rate for doubling in a year is low",
+      "Crypto volatility can amplify moves",
+      "No specific catalysts provided",
+      "Unrelated background context ignored"
+    ],
+    "fuentes": [
+      "gdelt",
+      "wiki",
+      "market"
+    ],
+    "reasoning": [
+      "Creencia externa: P(H|E) = 13.0% ± 13.4%",
+      "  · ensemble n=3/3: p=13.0%",
+      "  · Base rate for doubling in a year is low",
+      "  · Crypto volatility can amplify moves",
+      "  · No specific catalysts provided",
+      "Mercado YES ask = 50.0%  →  edge = -37.0%",
+      "Anclaje al mercado (w=0.30): P 13.0% → 20.9%",
+      "Lado BUY_NO: p=79.1% @ 50.0% → edge +29.1%  (yes_bid=50.0%)",
+      "SIZING RECHAZA: EV 0.2906 < 3.0σ (0.4020) → PASS (sin apuesta)"
+    ],
+    "signature": {
+      "signer": "0x87a49Abd203BFBB12Ec3761A9E3697fe406e5Ee3",
+      "digest": "0x386ac1dcb760fa0b400b167b34f5cee9835590cba4e1aedb80074a02968a7232"
+    },
+    "anchor": {
+      "status": "22",
+      "topic_id": "0.0.10374210",
+      "sha256": "df5bcbdc50b12a4e66df72b99eb1036c6482cdf028fffae446cbef19dd7f9dde",
+      "mirror_url": "https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10374210/messages",
+      "hashscan": "https://hashscan.io/testnet/topic/0.0.10374210"
+    },
+    "votos": [
+      {
+        "modelo": "deepseek:deepseek-v4-flash",
+        "p_yes": 0.15
+      },
+      {
+        "modelo": "openrouter:anthropic/claude-opus-5",
+        "p_yes": 0.08
+      },
+      {
+        "modelo": "openrouter:openai/gpt-5.6-luna",
+        "p_yes": 0.18
+      }
+    ],
+    "x402_settled_via": "Blocky402",
+    "payment": {
+      "payer": "0.0.10381472",
+      "amount_tinybar": "100000",
+      "settlement_tx": "0.0.7162784@1788631480.119182348"
+    },
+    "payment_audit": {
+      "status": "22",
+      "topic_id": "0.0.10374210",
+      "sha256": "3dcdfc34c0830b184a40049e8afdd0e78e07d2c70f5eeaa56579d071d984f93c",
+      "mirror_url": "https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10374210/messages",
+      "hashscan": "https://hashscan.io/testnet/transaction/0.0.7162784@1788631480.119182348",
+      "settlement_tx": "0.0.7162784@1788631480.119182348"
+    }
+  }
+}

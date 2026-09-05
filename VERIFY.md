@@ -56,9 +56,23 @@ curl -s https://ialanreynoso.tail3a9281.ts.net/health
 curl -s https://ialanreynoso.tail3a9281.ts.net/v1/forecast?question=Will%20ETH%20hit%2010k%20in%202026%3F
 ```
 
-Paying triggers the real flow: the receipt is verified, the forecast is produced (research →
-4-model committee → Platt → Kelly → EIP-191 signature) and the payment audit trail is written to
-HCS. Sample of a real response (unpaid local run): [`docs/live_forecast_2026-09-05.json`](docs/live_forecast_2026-09-05.json).
+Paying triggers the real flow — **verified end-to-end on Sep 5, 2026, twice** (once locally, once
+through the public endpoint): the client (an agent wallet, account `0.0.10381472`) sends a
+partially-signed Hedera TransferTransaction with the **Blocky402 facilitator as fee payer**
+(`POST /verify` → valid, `POST /settle` → consensus SUCCESS), and the service returns the signed
+forecast + a payment audit anchor on HCS.
+
+| What happened | Proof (clickable) |
+|---|---|
+| Agent wallet created on testnet (5 HBAR) | [account 0.0.10381472](https://hashscan.io/testnet/account/0.0.10381472) |
+| Settlement #1 (facilitator paid the network fee) | [0.0.7162784@1788631480.119182348](https://hashscan.io/testnet/transaction/0.0.7162784@1788631480.119182348) |
+| Settlement #2 (via the public internet endpoint) | [0.0.7162784@1788631598.935375690](https://hashscan.io/testnet/transaction/0.0.7162784@1788631598.935375690) |
+| Full request/response evidence (verdicts PASS and BLOCKED, signed) | [docs/x402_paid_evidence_20260905-120631.json](docs/x402_paid_evidence_20260905-120631.json) · [120834](docs/x402_paid_evidence_20260905-120834.json) |
+| Payment audit anchors on HCS | [topic 0.0.10374210](https://hashscan.io/testnet/topic/0.0.10374210) (messages `tipo: x402-payment-audit`) |
+
+To pay yourself: clone the repo and run `python scripts/ethonline/pay_x402.py --question "..." --url https://ialanreynoso.tail3a9281.ts.net` with a funded testnet account, or build the
+payment payload with `@x402/hedera` (the same wire format: x402 v2, scheme `exact`,
+`network: hedera:testnet`, `asset: 0.0.0`, `extra.feePayer: 0.0.7162784`).
 
 ---
 
