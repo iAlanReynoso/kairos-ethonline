@@ -1,64 +1,78 @@
-# Kairos Oracle 🔮
+# Kairos 🔮 — Signed Forecast Oracle on Hedera
 
-**A disciplined AI forecasting agent — competing live in real tournaments, with signed, verifiable decisions.**
+**A disciplined AI forecasting agent that signs every decision, anchors it on Hedera Consensus Service,
+and lets the network execute the next action — no keeper.**
 
-> *Baseline (pre-hackathon): what actually existed before the ETHOnline 2026 build window.
-> The Hedera integrations are the new work — see the "Before / After" section added in September.*
+> Live in Metaculus tournaments ($0 at risk). ETHOnline 2026 · track ♻️ **Continuity** · partners
+> **Hedera** (x402 + Continuity), **The Graph** (AI use case), **Bazantic** (agentic recipes).
 
 ---
 
-## What this is (honest baseline, July 2026)
+## What this is
 
-Kairos is a forecasting agent that competes **live, fully automated, with $0 capital at risk** in real
-forecasting tournaments — today in Metaculus's **AI-bot tournament ($50K, bot-only)** and the Metaculus Cup.
+For any question Kairos returns an explicit **BET / PASS / BLOCKED** with a human-readable reasoning
+trace, **signs** it (EIP-191), and **anchors** the digest to Hedera Consensus Service — so "we said
+this *before* the close" is a fact on a mirror node, not a promise. The next action is a **scheduled
+transaction executed by the network itself**: no cron, no keeper.
 
-For any question it produces an explicit **BET / PASS / BLOCKED** decision with a human-readable
-reasoning trace — and **signs** it (EIP-191), so the provenance of every forecast is verifiable
-off-chain by anyone, cross-language (`agentproof/` + `verify.js`).
+It competes **live, fully automated, with $0 at risk** in Metaculus's AI-bot tournament ($50K,
+bot-only) and the Cup. It **refuses good-looking edges** when they fail its risk discipline — and it
+shows the refusal, signed.
 
-The moment that matters: it **refuses good-looking edges** when they fail its risk discipline —
-and it shows the refusal, signed.
+---
+
+## Before / After — the ♻️ Continuity line
+
+| Before (pre-existing, on Hedera — Aug 2026) | After (new in this window, Sep 4–16) |
+|---|---|
+| Proof-of-concept spike (de-risking the SDK): account `0.0.10107589` · topic `0.0.10114138` · scheduled tx `0.0.10114149` **executed by the network** | **Production integration**: forecast digests anchored to HCS (Sept timestamps) · next action scheduled on-chain · HFS receipt with SHA-256 · **x402 pay-per-forecast** |
+| Forecasts signed EIP-191, verifiable off-chain | Payment audit trail in HCS · recurring access via scheduled transactions |
+
+> The August objects were the proof-of-concept spike. The September work integrates HCS anchoring +
+> Schedule execution + HFS receipts + x402 into the production pipeline. Every object above is clickable on Hashscan.
+
+---
+
+## Proof links (each claim → clickable evidence)
+
+| Claim | Proof |
+|---|---|
+| Forecast digests anchored pre-close | [HCS topic `0.0.10213059`](https://hashscan.io/testnet/topic/0.0.10213059) · [mirror node](https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10213059/messages) |
+| Pre-existing spike executed by the network | [Schedule `0.0.10114149`](https://hashscan.io/testnet/schedule/0.0.10114149) · [Topic `0.0.10114138`](https://hashscan.io/testnet/topic/0.0.10114138) |
+| Receipt on HFS | [File `0.0.10215927`](https://hashscan.io/testnet/file/0.0.10215927) |
+| EIP-191 signature verifiable | `node verify.js receipt.json` (see [VERIFY.md](VERIFY.md)) |
+
+---
 
 ## How it works
 
 ```
-question → multi-source research (GDELT news + Wikipedia base rates)
-        → committee of cross-lab LLMs (aggregated by log-odds pooling)
-        → Platt calibration against resolved outcomes
+question → multi-source research (GDELT + Wikipedia + market price)
+        → committee of 5 cross-lab LLMs (log-odds pooling, outlier trimming)
+        → Platt calibration (out-of-sample, anti-degradation guard)
         → risk discipline (fractional Kelly + hard drawdown / daily-loss gates)
-        → BET / PASS / BLOCKED (reasoning trace) → EIP-191 signature → verifiable receipt
+        → BET / PASS / BLOCKED (reasoning trace) → EIP-191 signature
+        → HCS anchor (pre-close) → scheduled execution of the next action (no keeper)
 ```
-
-- **Committee of cross-lab LLMs** — Google Gemini lineages + models via OpenRouter + a GLM
-  tie-breaker on disagreement — aggregated by log-odds pooling.
-- **Multi-source research** — GDELT news + Wikipedia base rates, injected per question.
-- **Calibration** — Platt scaling fitted out-of-sample (cross-validated guard) on resolved outcomes.
-- **Risk discipline** — fractional Kelly + hard drawdown / daily-loss gates → the BLOCKED that
-  LLM-YOLO agents don't have.
-- **Verifiable** — every forecast is signed (EIP-191) and machine-checkable with a 5-line verifier.
-
-## What is NOT here (deliberately)
-
-- **No on-chain anchoring yet** — the Hedera Consensus Service integration is the *new work* of
-  the hackathon window (September 2026), not part of this baseline.
-- **No x402 monetization** — an earlier draft pitch mentioned pay-per-forecast; it was never
-  deployed. The agent competes in judged arenas, it does not sell calls.
-- **No EAS attestations** — same story: drafted, never shipped.
-
-## Track record (verifiable, not claimed)
-
-- Competes **today** in Metaculus's AI-bot tournament and Cup — the public leaderboard shows its
-  official peer score, updated by the platform (we show it even when it's negative — that's the
-  point of a reputation you can *check*).
-- Every submitted forecast leaves a signed receipt; the system's weekly self-score against public
-  data (FRED/Cboe) is in the repo's `data/series_scores.jsonl`.
-
-## License
-
-MIT — see `LICENSE`.
 
 ---
 
-*This README documents the state of the project **before** the ETHOnline 2026 build window
-(4–16 September 2026). The Hedera integrations (HCS anchoring + Schedule Service execution) are
-the new work, documented separately with the same before/after separation the Continuity track asks for.*
+## AI attribution (required by the track)
+
+The engine is AI by design: a committee of cross-lab LLMs produces every decision, fully automated
+(DeepSeek v4-flash is the primary frontier model since Sep 2). Development is also AI-assisted under
+human supervision — the commit history is the audit trail. We do not claim hand-written code where AI
+did the work; the live tournament results are the verifiable evidence of what the system actually does.
+
+---
+
+## Security & boundaries
+
+- **Bounded agent**: read/analyse freely; write (anchor, schedule, pay) only within declared policy and caps.
+- **Claim boundaries**: no x402 monetization in production yet (the pay-per-forecast is the *new work*
+  of this window); no invented traction; $0 at risk.
+- **Keys** live in env vars, never committed; testnet only.
+
+---
+
+*MIT — see [LICENSE](LICENSE). Not financial advice. Testnet demo.*

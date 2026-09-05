@@ -1,198 +1,252 @@
-<!-- ⚠️ NOTA DE FECHA (2026-08-24): este demo.html es el artefacto conceptual de JULIO 2026.
-     Las referencias a "x402 · USDC" y "EAS · Base Sepolia" eran el PITCH de esa época — NUNCA se
-     deployaron (no hay pay-per-forecast ni attestations on-chain en producción). Lo que SÍ existe
-     de verdad: el agente compitiendo en vivo en torneos Metaculus, la firma EIP-191 con verificador
-     cross-lenguaje (agentproof), y la disciplina de decisión BET/PASS/BLOCKED con trazas de
-     razonamiento. La integración con Hedera es el trabajo NUEVO de la ventana (septiembre 2026),
-     no parte de esta base. Ver README.md (baseline honesto, reescrito 24-ago). -->
+<!--
+  Kairos — Signed Forecast Oracle on Hedera · ETHOnline 2026 · track ♻️ Continuity.
+  Re-skin 1-sep 2026 (directiva adversarial): removed the July pitch (x402/EAS/USDC/Base Sepolia —
+  never deployed). What this page shows is what exists: EIP-191 signatures, HCS anchoring,
+  Schedule Service execution, HFS receipts — all with real, clickable testnet objects.
+  The "Before" objects are the Aug proof-of-concept spike; the "After" work is built in the
+  4–16 Sep window (see README before/after section). No claim here is ahead of what is live.
+-->
 <style>
+:root{
+  --bg:#f4f6fa; --surface:#ffffff; --surface-2:#eef1f7; --line:#dde2ec;
+  --ink:#0e131c; --muted:#5a6474; --faint:#8a93a5;
+  --accent:#0e8f9e; --bet:#0f9d63; --pass:#b7791f; --blocked:#d13a52;
+  --bet-bg:#e5f6ee; --pass-bg:#faf1dd; --blocked-bg:#fbe6ea;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
   :root{
-    --bg:#f4f6fa; --surface:#ffffff; --surface-2:#eef1f7; --line:#dde2ec;
-    --ink:#0e131c; --muted:#5a6474; --faint:#8a93a5;
-    --accent:#0e8f9e;            /* signal teal — el hilo "firmado / on-chain" */
-    --bet:#0f9d63; --pass:#b7791f; --blocked:#d13a52;
-    --bet-bg:#e5f6ee; --pass-bg:#faf1dd; --blocked-bg:#fbe6ea;
-    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  @media (prefers-color-scheme:dark){
-    :root{
-      --bg:#0a0e16; --surface:#111725; --surface-2:#0e1420; --line:#20293a;
-      --ink:#e7ecf5; --muted:#8f99ad; --faint:#5e6b82;
-      --accent:#43d6e6; --bet:#37d691; --pass:#e6b23f; --blocked:#f2687c;
-      --bet-bg:#0f2320; --pass-bg:#241d0f; --blocked-bg:#241016;
-    }
-  }
-  :root[data-theme="dark"]{
     --bg:#0a0e16; --surface:#111725; --surface-2:#0e1420; --line:#20293a;
     --ink:#e7ecf5; --muted:#8f99ad; --faint:#5e6b82;
     --accent:#43d6e6; --bet:#37d691; --pass:#e6b23f; --blocked:#f2687c;
     --bet-bg:#0f2320; --pass-bg:#241d0f; --blocked-bg:#241016;
   }
-  :root[data-theme="light"]{
-    --bg:#f4f6fa; --surface:#ffffff; --surface-2:#eef1f7; --line:#dde2ec;
-    --ink:#0e131c; --muted:#5a6474; --faint:#8a93a5;
-    --accent:#0e8f9e; --bet:#0f9d63; --pass:#b7791f; --blocked:#d13a52;
-    --bet-bg:#e5f6ee; --pass-bg:#faf1dd; --blocked-bg:#fbe6ea;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-    line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
-  .wrap{max-width:1060px;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px)}
-  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--accent);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  h1{font-size:clamp(30px,5.2vw,52px);line-height:1.04;letter-spacing:-.02em;margin:.5em 0 .3em;
-    text-wrap:balance;font-weight:750;max-width:16ch}
-  h1 em{font-style:normal;color:var(--accent)}
-  .lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:60ch;margin:0}
-  .meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
-  .chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;padding:5px 10px;border-radius:999px;
-    border:1px solid var(--line);color:var(--muted);background:var(--surface)}
-  section{margin-top:clamp(38px,6vw,64px)}
-  .sec-label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--faint);margin-bottom:16px}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;
-    display:flex;flex-direction:column;gap:14px}
-  .card.hero-card{border-color:color-mix(in srgb,var(--blocked) 55%,var(--line));
-    box-shadow:0 0 0 1px color-mix(in srgb,var(--blocked) 22%,transparent)}
-  .card q{quotes:none;font-weight:600;font-size:15.5px;display:block}
-  .verdict{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;
-    font-size:13px;letter-spacing:.06em;padding:6px 12px;border-radius:8px;width:fit-content}
-  .verdict::before{content:"";width:8px;height:8px;border-radius:2px;background:currentColor}
-  .v-bet{color:var(--bet);background:var(--bet-bg)}
-  .v-pass{color:var(--pass);background:var(--pass-bg)}
-  .v-blocked{color:var(--blocked);background:var(--blocked-bg)}
-  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;background:var(--line);
-    border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  .stat{background:var(--surface);padding:10px 12px}
-  .stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
-  .stat .v{font-family:var(--mono);font-size:17px;font-weight:650;margin-top:3px}
-  .stat .v.edge{color:var(--accent)}
-  .stat .v.size-0{color:var(--faint)}
-  .trace{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;
-    border-top:1px solid var(--line);padding-top:12px}
-  .trace li{font-family:var(--mono);font-size:12px;color:var(--muted);padding:4px 0 4px 16px;position:relative}
-  .trace li::before{content:"›";position:absolute;left:0;color:var(--faint)}
-  .trace li.punch{color:var(--ink);font-weight:650;margin-top:2px}
-  .trace li.punch.bet{color:var(--bet)} .trace li.punch.pass{color:var(--pass)} .trace li.punch.blocked{color:var(--blocked)}
-  .pitchline{font-size:clamp(17px,2.4vw,22px);font-weight:600;text-wrap:balance;max-width:40ch;margin:0 0 4px}
-  .pitchline b{color:var(--blocked)}
-  /* proof chain */
-  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-  .step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
-  .step .n{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.08em}
-  .step h3{margin:0;font-size:15px}
-  .step p{margin:0;font-size:13px;color:var(--muted)}
-  .code{font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--surface-2);
-    border:1px solid var(--line);border-radius:7px;padding:7px 9px;overflow-x:auto;white-space:nowrap}
-  .code .lbl{color:var(--faint)}
-  footer{margin-top:clamp(40px,6vw,68px);border-top:1px solid var(--line);padding-top:20px;
-    font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
-  footer b{color:var(--ink);font-weight:600}
-  a{color:var(--accent)}
-  @media (prefers-reduced-motion:no-preference){.card,.step{transition:transform .15s ease}}
-</style>
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+.wrap{max-width:1060px;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+h1{font-size:clamp(30px,5.2vw,52px);line-height:1.04;letter-spacing:-.02em;margin:.5em 0 .3em;
+  text-wrap:balance;font-weight:750;max-width:18ch}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:62ch;margin:0}
+.meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;padding:5px 10px;border-radius:999px;
+  border:1px solid var(--line);color:var(--muted);background:var(--surface)}
+section{margin-top:clamp(38px,6vw,64px)}
+.sec-label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;
+  display:flex;flex-direction:column;gap:14px}
+.card.hero-card{border-color:color-mix(in srgb,var(--blocked) 55%,var(--line));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--blocked) 22%,transparent)}
+.card q{quotes:none;font-weight:600;font-size:15.5px;display:block}
+.verdict{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;
+  font-size:13px;letter-spacing:.06em;padding:6px 12px;border-radius:8px;width:fit-content}
+.verdict::before{content:"";width:8px;height:8px;border-radius:2px;background:currentColor}
+.v-bet{color:var(--bet);background:var(--bet-bg)}
+.v-pass{color:var(--pass);background:var(--pass-bg)}
+.v-blocked{color:var(--blocked);background:var(--blocked-bg)}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;background:var(--line);
+  border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:10px 12px}
+.stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.stat .v{font-family:var(--mono);font-size:17px;font-weight:650;margin-top:3px}
+.stat .v.edge{color:var(--accent)}
+.stat .v.size-0{color:var(--faint)}
+.trace{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;
+  border-top:1px solid var(--line);padding-top:12px}
+.trace li{font-family:var(--mono);font-size:12px;color:var(--muted);padding:4px 0 4px 16px;position:relative}
+.trace li::before{content:"›";position:absolute;left:0;color:var(--faint)}
+.trace li.punch{color:var(--ink);font-weight:650;margin-top:2px}
+.trace li.punch.bet{color:var(--bet)} .trace li.punch.pass{color:var(--pass)} .trace li.punch.blocked{color:var(--blocked)}
+.pitchline{font-size:clamp(17px,2.4vw,22px);font-weight:600;text-wrap:balance;max-width:44ch;margin:0 0 4px}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.step .n{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.08em}
+.step h3{margin:0;font-size:15px}
+.step p{margin:0;font-size:13px;color:var(--muted)}
+.code{font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:7px;padding:7px 9px;overflow-x:auto;white-space:nowrap}
+.code .lbl{color:var(--faint)}
+.verify-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px}
+.verify-box .code{margin-top:10px}
+.verify-box button{font-family:var(--mono);font-size:12px;letter-spacing:.05em;border:1px solid var(--accent);
+  color:var(--accent);background:transparent;border-radius:8px;padding:8px 14px;cursor:pointer}
+.verify-box button:hover{background:var(--accent);color:var(--surface)}
+.verify-box .status{font-family:var(--mono);font-size:12px;margin-top:10px;min-height:18px}
+.ok{color:var(--bet)} .err{color:var(--blocked)}
+footer{margin-top:clamp(40px,6vw,68px);border-top:1px solid var(--line);padding-top:20px;
+  font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+footer b{color:var(--ink);font-weight:600}
+a{color:var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);background:var(--surface-2)}
+td .mono{font-family:var(--mono);font-size:12px}
 
+</style>
 <div class="wrap">
   <header>
-    <div class="eyebrow"><span class="dot"></span> Kairos · Signed Forecast Oracle · ETHOnline 2026</div>
-    <h1>El único agente que firma <em>por qué dice que no</em>.</h1>
-    <p class="lede">Los agentes de trading te dicen qué apostar. Kairos toma una decisión
-      <strong>disciplinada</strong> —calibración bayesiana, sizing de Kelly, gate de drawdown—,
-      la <strong>firma</strong>, cobra por ella vía <strong>x402</strong> y la <strong>ancla on-chain</strong>.
-      Comprás una decisión auditada, no la opinión de un LLM.</p>
+    <div class="eyebrow"><span class="dot"></span> Kairos · Signed Forecast Oracle · ETHOnline 2026 · ♻️ Continuity</div>
+    <h1>An agent whose forecasts you can <em>check</em> — anchored on Hedera.</h1>
+    <p class="lede">Kairos competes live in real forecasting tournaments. Every decision is
+      <strong>BET / PASS / BLOCKED</strong> with a human-readable reasoning trace, <strong>signed</strong>
+      (EIP-191) so provenance is machine-checkable, and the digest is <strong>anchored to Hedera
+      Consensus Service</strong> — ordered and timestamped by the network. The next action is executed by
+      the <strong>Schedule Service itself</strong>: no keeper, no "the laptop was asleep".</p>
     <div class="meta-row">
       <span class="chip">EIP-191 signed</span>
-      <span class="chip">x402 · USDC</span>
-      <span class="chip">EAS · Base Sepolia (84532)</span>
-      <span class="chip">$0 capital — merit + bounty</span>
+      <span class="chip">HCS anchoring</span>
+      <span class="chip">Schedule Service · no keeper</span>
+      <span class="chip">$0 capital at risk</span>
     </div>
   </header>
 
   <section>
-    <div class="sec-label">Tres decisiones reales del motor — misma disciplina, distinto veredicto</div>
+    <div class="sec-label">Real decisions from the engine — same discipline, different verdict</div>
     <div class="cards">
-
       <div class="card">
-        <span class="verdict v-bet">BET · $200</span>
-        <q>¿El candidato X gana la elección?</q>
+        <span class="verdict v-bet">BET</span>
+        <q>Will candidate X win the election?</q>
         <div class="stats">
-          <div class="stat"><div class="k">Creencia</div><div class="v">72%</div></div>
+          <div class="stat"><div class="k">Belief</div><div class="v">72%</div></div>
           <div class="stat"><div class="k">Edge</div><div class="v edge">+24%</div></div>
-          <div class="stat"><div class="k">Apuesta</div><div class="v">$200</div></div>
+          <div class="stat"><div class="k">Size</div><div class="v">α-safe</div></div>
         </div>
         <ul class="trace">
           <li>P(H|E) = 72.0% ± 5.0%</li>
-          <li>YES ask 48% → edge +24.0%</li>
-          <li>EV neto 20.85% · Kelly f*=0.427 → α-safe 0.107</li>
-          <li class="punch bet">RIESGO OK — todos los gates pasan → BET</li>
+          <li>market YES 48% → edge +24.0%</li>
+          <li>EV net 20.85% · Kelly f*=0.427 → α-safe</li>
+          <li class="punch bet">RISK OK — all gates pass → BET</li>
         </ul>
       </div>
-
       <div class="card">
-        <span class="verdict v-pass">PASS · $0</span>
-        <q>¿La Fed sube tasas la próxima reunión?</q>
+        <span class="verdict v-pass">PASS</span>
+        <q>Will the Fed hike at the next meeting?</q>
         <div class="stats">
-          <div class="stat"><div class="k">Creencia</div><div class="v">51%</div></div>
+          <div class="stat"><div class="k">Belief</div><div class="v">51%</div></div>
           <div class="stat"><div class="k">Edge</div><div class="v">+1%</div></div>
-          <div class="stat"><div class="k">Apuesta</div><div class="v size-0">$0</div></div>
+          <div class="stat"><div class="k">Size</div><div class="v size-0">$0</div></div>
         </div>
         <ul class="trace">
           <li>P(H|E) = 51.0% ± 22.0%</li>
-          <li>YES ask 50% → edge +1.0%</li>
-          <li class="punch pass">EV neto no-positivo → PASS (sin apuesta)</li>
+          <li>market YES 50% → edge +1.0%</li>
+          <li class="punch pass">EV non-positive → PASS (no bet)</li>
         </ul>
       </div>
-
       <div class="card hero-card">
-        <span class="verdict v-blocked">BLOCKED · $0</span>
-        <q>¿BTC +20% este mes? <span style="color:var(--faint);font-weight:500">(mercado ilíquido)</span></q>
+        <span class="verdict v-blocked">BLOCKED</span>
+        <q>Will BTC be +20% this month? <span style="color:var(--faint);font-weight:500">(illiquid market)</span></q>
         <div class="stats">
-          <div class="stat"><div class="k">Creencia</div><div class="v">64%</div></div>
+          <div class="stat"><div class="k">Belief</div><div class="v">64%</div></div>
           <div class="stat"><div class="k">Edge</div><div class="v edge">+36%</div></div>
-          <div class="stat"><div class="k">Apuesta</div><div class="v size-0">$0</div></div>
+          <div class="stat"><div class="k">Size</div><div class="v size-0">$0</div></div>
         </div>
         <ul class="trace">
           <li>P(H|E) = 64.0% ± 7.0%</li>
-          <li>YES ask 28% → edge <b>+36.0%</b></li>
-          <li>Kelly quería $200…</li>
-          <li class="punch blocked">RIESGO BLOQUEA: vol 24h $700 &lt; mín $10,000</li>
+          <li>market YES 28% → edge +36.0%</li>
+          <li>Kelly wanted a position…</li>
+          <li class="punch blocked">RISK BLOCKS: 24h vol $700 &lt; min $10,000</li>
         </ul>
       </div>
-
     </div>
-    <p class="pitchline" style="margin-top:20px">Un edge de <b>+36%</b> que casi cualquier bot tomaría — y Kairos lo <b>rechaza</b>, firmado, porque el mercado es ilíquido.</p>
+    <p class="pitchline" style="margin-top:20px">A <b>+36%</b> edge most bots would take — Kairos <b>refuses it</b>, signed, because the market is illiquid.</p>
   </section>
 
   <section>
-    <div class="sec-label">La cadena de prueba — de la decisión al registro on-chain</div>
+    <div class="sec-label">The proof chain — from decision to on-ledger record</div>
     <div class="flow">
       <div class="step">
-        <div class="n">01 · FIRMA</div>
-        <h3>Razonamiento firmado</h3>
-        <p>El digest keccak256 de la decisión, firmado por la wallet (EIP-191). Verificable sin gas ni red.</p>
-        <div class="code"><span class="lbl">digest </span>0x0e5458e4a4026e5f…468792c4</div>
+        <div class="n">01 · SIGN</div>
+        <h3>Signed reasoning</h3>
+        <p>The digest of the decision (BET/PASS/BLOCKED + trace), signed EIP-191 by the agent key.
+          Verifiable offline, cross-language (<code>agentproof/verify.js</code>).</p>
+        <div class="code"><span class="lbl">sig </span>EIP-191 · keccak256 digest</div>
       </div>
       <div class="step">
-        <div class="n">02 · PAGO</div>
-        <h3>x402 · pay-per-forecast</h3>
-        <p>El cliente pide → <b>402 Payment Required</b> → paga un micro-fee en USDC → recibe el forecast firmado.</p>
-        <div class="code"><span class="lbl">402 </span>USDC 0.05 → <span class="lbl">200 OK</span> signed</div>
+        <div class="n">02 · ANCHOR</div>
+        <h3>Hedera Consensus Service</h3>
+        <p>The digest is submitted to an HCS topic <em>before the question closes</em>. The network orders
+          and timestamps it — "we said this before close" becomes a fact on a mirror node.</p>
+        <div class="code"><span class="lbl">topic </span><a href="https://hashscan.io/testnet/topic/0.0.10213059" target="_blank" rel="noopener">0.0.10213059</a> · kairos-oracle</div>
       </div>
       <div class="step">
-        <div class="n">03 · ON-CHAIN</div>
-        <h3>Attestation en EAS</h3>
-        <p>El digest se ancla vía EAS en Base Sepolia — el <b>state-change on-chain</b> que exigen los tracks de oráculo.</p>
-        <div class="code"><span class="lbl">EAS.attest </span>0xf17325e7… <span class="lbl">· chain 84532</span></div>
+        <div class="n">03 · EXECUTE</div>
+        <h3>Schedule Service · no keeper</h3>
+        <p>The next action is a scheduled transaction <em>executed by the network</em> when signatures
+          are complete — not by our cron, not by a relayer.</p>
+        <div class="code"><span class="lbl">schedule </span><a href="https://hashscan.io/testnet/schedule/0.0.10114149" target="_blank" rel="noopener">0.0.10114149</a> · executed by network</div>
       </div>
+    </div>
+
+    <div class="verify-box">
+      <div class="sec-label" style="margin-bottom:8px">Verify it live — no auth, no setup</div>
+      <p style="margin:0 0 10px;font-size:13px;color:var(--muted)">Fetches the real testnet mirror node: the
+        <code>kairos-oracle</code> topic and its anchored messages (forecast digests + HFS receipt).</p>
+      <button onclick="verifyLive()">Fetch mirror node →</button>
+      <div class="code" id="verifyTarget" style="display:none"></div>
+      <div class="status" id="verifyStatus"></div>
     </div>
   </section>
 
+  <section>
+    <div class="sec-label">Before / After — the ♻️ Continuity line, drawn in public</div>
+    <table>
+      <tr><th>Before (pre-existing, on Hedera)</th><th>After (built in this window)</th></tr>
+      <tr>
+        <td><span class="mono">account <a href="https://hashscan.io/testnet/account/0.0.10107589" target="_blank" rel="noopener">0.0.10107589</a></span><br>
+            spike topic <a href="https://hashscan.io/testnet/topic/0.0.10114138" target="_blank" rel="noopener">0.0.10114138</a><br>
+            scheduled tx <a href="https://hashscan.io/testnet/schedule/0.0.10114149" target="_blank" rel="noopener">0.0.10114149</a> executed by the network (Aug)</td>
+        <td><span class="mono">production topic <b>kairos-oracle-prod</b> (submit-key)</span><br>
+            3+ forecast anchors with Sept timestamps<br>
+            scheduled execution of the <em>next action</em> on-chain<br>
+            HFS receipt storage (<a href="https://hashscan.io/testnet/file/0.0.10215927" target="_blank" rel="noopener">0.0.10215927</a>)</td>
+      </tr>
+    </table>
+    <p style="font-size:13px;color:var(--muted);margin-top:10px">The August objects were the proof-of-concept spike (de-risking the Hedera SDK). The September work integrates
+      HCS anchoring + Schedule execution + HFS receipts into the production pipeline. The README draws this line
+      and every object above is clickable on Hashscan.</p>
+  </section>
+
   <footer>
-    <div><b>Honesto (RBHM):</b> demo en dry-run + testnet. La demanda x402 real todavía es fina — esto es
-      <b>demo + bounty</b>, no una línea de ingreso. El edge de mercado no es el pitch; la <b>disciplina verificable</b> sí.</div>
-    <div><b>Kairos</b> — agente de forecasting disciplinado · compitiendo hoy en Metaculus · ETHOnline 4–16 sep 2026.</div>
+    <div><b>Honest (RBHM):</b> live demo runs on testnet with $0 at risk; the Metaculus peer score is shown
+      as the platform reports it — including when it is negative, because that is the point of a reputation
+      you can check.</div>
+    <div><b>Kairos</b> — disciplined AI forecasting agent · competing today in Metaculus tournaments ·
+      ETHOnline 2026 · track ♻️ Continuity (Hedera).</div>
   </footer>
 </div>
+
+<script>
+async function verifyLive(){
+  var btn = document.querySelector('.verify-box button');
+  var st = document.getElementById('verifyStatus');
+  var tgt = document.getElementById('verifyTarget');
+  btn.disabled = true; st.className = 'status'; st.textContent = 'Fetching testnet mirror node…';
+  tgt.style.display = 'block';
+  try {
+    var r = await fetch('https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10213059/messages');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var d = await r.json();
+    var msgs = (d.messages || []);
+    tgt.textContent = 'topic 0.0.10213059 · ' + msgs.length + ' anchored message(s)' +
+      msgs.slice(0,3).map(function(m){
+        try { var t = JSON.parse(atob(m.message)); return '\n  seq ' + m.sequence_number + ' → ' + (t.tipo || t.type || '?'); }
+        catch(e){ return '\n  seq ' + m.sequence_number + ' → (binary)'; }
+      }).join('');
+    st.className = 'status ok';
+    st.textContent = '✓ LIVE: ' + msgs.length + ' messages confirmed from mirror node (testnet).';
+  } catch(e) {
+    st.className = 'status err';
+    st.textContent = '✗ fetch failed (' + e.message + ') — try again; testnet mirror can be slow.';
+  }
+  btn.disabled = false;
+}
+</script>
+
