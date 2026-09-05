@@ -44,6 +44,19 @@ shows the refusal, signed.
 
 ---
 
+---
+
+## Partner integrations (Hedera + The Graph + Ledger)
+
+We apply to three partner prizes. For each, we document exactly how we used their tools and our
+feedback — see [PARTNERS.md](PARTNERS.md). Summary:
+
+| Partner | What we use | Evidence |
+|---|---|---|
+| **Hedera** | HCS (anchor) + Schedule Service (no-keeper) + HFS (receipt) | topic 0.0.10213059 · schedule 0.0.10114149 · file 0.0.10215927 |
+| **The Graph** | Messari Standardized Subgraphs as live evidence for the committee | Subgraph Studio API key (live, never mocked) |
+| **Ledger** | Key Ring + device confirmation on the BLOCKED/high-risk path | wallet-cli ring as key backend |
+
 ## How it works
 
 ```
