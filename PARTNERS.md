@@ -49,9 +49,15 @@ Code: `kairos/pay/hedera_x402.py` (requirements v2, scheme exact, asset 0.0.0, f
 Messari Standardized Subgraphs (one shared schema across protocols), queried via Subgraph Studio.
 
 **How it's integrated (evidence):**
-- The forecasting committee consumes on-chain metrics (e.g. Uniswap/Aave/Lido volume, TVL) as evidence
+- The forecasting committee consumes on-chain metrics (e.g. Uniswap/Aave volume, TVL) as evidence
   for crypto/protocol questions, in the research stage of the pipeline.
-- A/B measured: does adding live Graph data improve calibration? (Platt/peer score on matched questions.)
+- **Live query verified 5-sep:** the gateway returned the latest uniswap-v3-ethereum daily snapshots
+  (TVL ≈ $136.3B, daily volume ≈ $368M on the most recent snapshot) — real data, not fixtures. The
+  stage feeds the committee prompt and the response's `fuentes` field reports `thegraph` only
+  when the evidence was actually used.
+- A/B measured: does adding live Graph data improve calibration? Two identical ForecastBench
+  harvests (same questions, same committee) with the evidence ON vs OFF, Brier compared. Result
+  posted here when the run completes.
 
 **Code path:** `kairos/graph_evidence.py` — queries GraphQL LIVE contra la gateway de Subgraph
 Studio con los subgraphs Messari en la red descentralizada (graph IDs del deployment.json oficial:

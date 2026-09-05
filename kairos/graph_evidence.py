@@ -63,9 +63,16 @@ async def graph_evidence(question: str) -> dict[str, Any]:
         return _cache[question][1]
     url = GATEWAY.format(api_key=api_key, graph_id=entry["graph_id"])
     payload = {"query": entry["query"]}
+    # La gateway va detras de Cloudflare: sin un User-Agent de navegador responde 403 (error 1010).
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                       "(KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"),
+    }
     try:
         async with aiohttp.ClientSession() as s:
-            async with s.post(url, json=payload, timeout=20) as r:
+            async with s.post(url, json=payload, headers=headers, timeout=20) as r:
                 if r.status != 200:
                     out = {"error": f"The Graph HTTP {r.status}", "domain": domain}
                 else:
