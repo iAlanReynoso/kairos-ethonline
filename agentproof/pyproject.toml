@@ -1,0 +1,14 @@
+[project]
+name = "agentproof"
+version = "0.1.0"
+description = "Accountability drop-in para agentes de IA: firma verificable del razonamiento + reputación por calibración ($0, sin token, neutral)."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["eth-account>=0.11", "eth-hash[pycryptodome]>=0.7"]
+
+[project.urls]
+Homepage = "https://github.com/kairos/agentproof"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
