@@ -83,6 +83,24 @@ td{color:#c9ccd2}
 .foot{margin-top:50px;color:var(--ink3);font-size:12.5px;text-align:center;border-top:1px solid var(--line);padding-top:20px}
 .hidden{display:none}
 .err{color:var(--bad);font-size:14px;font-family:var(--mono)}
+
+.hero{position:relative;overflow:hidden;border-radius:24px;background:radial-gradient(1200px 500px at 50% -10%,rgba(0,113,227,.22),transparent 60%),radial-gradient(800px 400px at 85% 110%,rgba(41,151,255,.10),transparent 55%)}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(700px 400px at 50% 0%,#000 30%,transparent 75%);pointer-events:none}
+.emblem{width:74px;height:74px;margin:0 auto 18px;position:relative}
+.emblem svg{display:block}
+.eventbadge{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:999px;padding:7px 16px;margin-top:18px;font-size:12.5px;color:var(--ink2);font-family:var(--mono)}
+.eventbadge .e{color:var(--acc2);font-weight:700}
+.partners{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0 8px}
+@media(max-width:760px){.partners{grid-template-columns:1fr}}
+.pcard{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;overflow:hidden}
+.pcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.pcard.hedera::before{background:#8259ef}.pcard.graph::before{background:#6747ed}.pcard.ledger::before{background:#e8e8ed}
+.pcard .pn{font-weight:800;font-size:14px;letter-spacing:.06em}
+.pcard.hedera .pn{color:#a98cff}.pcard.graph .pn{color:#8f7bff}.pcard.ledger .pn{color:#e8e8ed}
+.pcard .pd{color:var(--ink2);font-size:12.5px;margin:5px 0 8px;line-height:1.45}
+.pcard .pl{font-family:var(--mono);font-size:11.5px;color:var(--acc2)}
+.icon{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);margin-bottom:10px;color:var(--acc2)}
+.icon svg{width:17px;height:17px}
 </style>
 </head>
 <body>
@@ -93,9 +111,18 @@ td{color:#c9ccd2}
     <div class='live'><span class='dot'></span>MOTOR EN VIVO</div>
   </div>
   <div class='hero'>
-    <div class='kicker'>Predicciones verificables</div>
+    <div class='emblem'>
+    <svg width='74' height='74' viewBox='0 0 74 74'><defs><linearGradient id='kg' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#2997ff'/><stop offset='1' stop-color='#0071e3'/></linearGradient></defs>
+    <circle cx='37' cy='37' r='33' fill='none' stroke='url(#kg)' stroke-width='2.5'/>
+    <circle cx='37' cy='37' r='24' fill='none' stroke='rgba(255,255,255,.14)' stroke-width='1'/>
+    <path d='M28 47V27l11 14 7-14v20' fill='none' stroke='#fff' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/>
+    <circle cx='55' cy='19' r='4' fill='#30d158'><animate attributeName='opacity' values='1;.3;1' dur='2s' repeatCount='indefinite'/></circle>
+    </svg>
+  </div>
+  <div class='kicker'>Predicciones verificables</div>
     <h1>Pregúntale al mercado.<br>Kairos <em>lo investiga, lo vota y lo firma.</em></h1>
     <p>Un comité de 4 modelos independientes analiza la pregunta con datos vivos, calibra la probabilidad, aplica disciplina de riesgo y firma el veredicto en Hedera. Todo lo que ves abajo es real — cada voto aterriza en pantalla en el momento en que el modelo termina.</p>
+    <div class='eventbadge'><span class='e'>ETHOnline 2026</span> · Track Continuity · Hedera + The Graph + Ledger</div>
     <div class='metrics'>
       <span class='chip'>Comité <b>3+1</b> modelos</span>
       <span class='chip'>Calibración <b>Platt</b></span>
@@ -105,6 +132,11 @@ td{color:#c9ccd2}
     </div>
   </div>
 
+  <div class='partners'>
+    <div class='pcard hedera'><div class='pn'>HEDERA</div><div class='pd'>HCS para anclar cada digesto antes del cierre · Schedule Service · HFS · pago x402 settleado vía Blocky402.</div><div class='pl'>2 settlements reales → Hashscan</div></div>
+    <div class='pcard graph'><div class='pn'>THE GRAPH</div><div class='pd'>Subgraphs estandarizados Messari como evidencia on-chain viva del comité. Nunca mockeado.</div><div class='pl'>A/B Brier publicado con delta honesto</div></div>
+    <div class='pcard ledger'><div class='pn'>LEDGER</div><div class='pd'>Confirmación por dispositivo frente a las acciones de alto riesgo · Key Ring como backend de secretos.</div><div class='pl'>wallet-cli 2.1.0 · gate cableado</div></div>
+  </div>
   <div class='console'>
     <div class='qrow'>
       <input id='q' placeholder='Escribe tu pregunta — por ejemplo: ¿ETH superará 10k USD en 2026?' />
@@ -146,7 +178,7 @@ td{color:#c9ccd2}
 
   <div class='cols'>
     <div class='card'>
-      <h2>Calibración medida, no prometida</h2>
+      <span class='icon'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 3a9 9 0 1 0 9 9'/><path d='M12 7l3.5 5H8.5z'/></svg></span><h2>Calibración medida, no prometida</h2>
       <table>
         <tr><th>Métrica</th><th>Valor</th></tr>
         <tr><td>A/B The Graph (Brier, n=12)</td><td class='num'>0.2169 con evidencia · 0.2002 sin · Δ +0.0168 — publicado con lectura honesta</td></tr>
@@ -156,7 +188,7 @@ td{color:#c9ccd2}
       <p style='margin-top:12px'>El sistema publica sus rechazos — incluidos los scores desfavorables — porque la calibración real se demuestra con números, no con promesas.</p>
     </div>
     <div class='card'>
-      <h2>Pagar por un forecast (x402)</h2>
+      <span class='icon'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M13 2L4 14h6l-1 8 9-12h-6z'/></svg></span><h2>Pagar por un forecast (x402)</h2>
       <p>El mismo motor se vende por llamada: HTTP 402 con requisitos x402, settlement real vía el facilitador Blocky402 en Hedera testnet.</p>
       <table>
         <tr><th>Campo</th><th>Valor</th></tr>
@@ -169,12 +201,12 @@ td{color:#c9ccd2}
   </div>
   <div class='cols'>
     <div class='card'>
-      <h2>Prueba on-chain</h2>
+      <span class='icon'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M9 15l6-6'/><circle cx='7' cy='7' r='2.5'/><circle cx='17' cy='17' r='2.5'/><circle cx='17' cy='7' r='2.5'/><circle cx='7' cy='17' r='2.5'/></svg></span><h2>Prueba on-chain</h2>
       <p>Cada digesto de forecast queda anclado en Hedera Consensus Service <span class='num'>0.0.10374210</span> antes de que la pregunta cierre. <a href='https://hashscan.io/testnet/topic/0.0.10374210' target='_blank'>Ver topic en Hashscan</a> · <a href='https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10374210/messages' target='_blank'>Mirror node</a></p>
       <p>Repo público (todo el trabajo nuevo open source): <a href='https://github.com/iAlanReynoso/kairos-ethonline' target='_blank'>github.com/iAlanReynoso/kairos-ethonline</a></p>
     </div>
     <div class='card'>
-      <h2>Cómo decide</h2>
+      <span class='icon'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='5' cy='6' r='2.5'/><circle cx='19' cy='6' r='2.5'/><circle cx='12' cy='18' r='2.5'/><path d='M7.5 6h9M5 8.5v3.5M19 8.5v3.5M9.5 18h5M5 12h14'/></svg></span><h2>Cómo decide</h2>
       <p class='num' style='font-size:13px;line-height:1.9'>pregunta → investigación (noticias + contexto + The Graph live)<br>→ comité 3+1 (log-odds pooling, trim de extremos)<br>→ Platt + anclaje al mercado<br>→ Kelly α=0.25 + gates de riesgo (drawdown 15%, pérdida diaria 5%)<br>→ BET / PASS / BLOCKED → firma EIP-191<br>→ ancla HCS</p>
     </div>
   </div>
