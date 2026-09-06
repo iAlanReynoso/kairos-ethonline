@@ -8,6 +8,17 @@ and lets the network execute the next action — no keeper.**
 
 ---
 
+
+<!-- SEO -->
+**Kairos Oracle** — AI forecasting agent for binary prediction markets: a committee of 4 cross-lab
+LLMs researches live evidence (news, context, The Graph on-chain data), calibrates with Platt
+scaling, sizes with fractional Kelly, and signs every verdict (EIP-191) into Hedera Consensus
+Service. Pay-per-forecast via x402 (Blocky402 facilitator, Hedera testnet). ETHOnline 2026,
+Continuity track, partners: Hedera, The Graph, Ledger.
+
+*Keywords:* AI forecasting · prediction markets · calibrated ensemble · Platt scaling · fractional
+Kelly · x402 · Hedera HCS · The Graph subgraphs · Ledger Key Ring · agentic payments · EIP-191.
+<!-- /SEO -->
 ## What this is
 
 For any question Kairos returns an explicit **BET / PASS / BLOCKED** with a human-readable reasoning
