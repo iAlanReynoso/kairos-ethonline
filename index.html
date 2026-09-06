@@ -1,223 +1,258 @@
-<!DOCTYPE html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html>
+<html lang='es'>
+<head>
+<meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
 <title>Kairos — Predicciones verificables</title>
-<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
-:root{--ink:#1d1d1f;--gray:#6e6e73;--hairline:#d2d2d7;--canvas:#f5f5f7;--paper:#fff;--blue:#0071e3;--blue2:#00a2ff;--blue-dim:rgba(0,113,227,.07);--green:#0a8f4a;--amber:#b07d1f;--red:#d70015;--dark:#0f1012;--darkcard:#161719;--sans:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace}
-*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
-.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)}
-.reveal.visible{opacity:1;transform:none}
-nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--hairline)}
-.nav-in{max-width:1120px;margin:0 auto;padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{font-weight:800;font-size:15px;letter-spacing:-.02em}.nav-logo span{color:var(--blue)}
-.nav-links{display:flex;gap:24px;font-size:13px}.nav-links a{color:var(--gray);text-decoration:none}.nav-links a:hover{color:var(--ink)}
-.nav-cta{font-size:13px;font-weight:600;color:#fff;background:var(--blue);padding:7px 16px;border-radius:980px;text-decoration:none}
-header{padding:80px 0 48px;text-align:center;background:radial-gradient(900px 420px at 50% -8%,rgba(0,113,227,.10),transparent)}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--blue);background:var(--blue-dim);padding:7px 16px;border-radius:980px;font-weight:600;margin-bottom:26px}
-.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
-h1{font-size:clamp(42px,7vw,80px);line-height:1.03;letter-spacing:-.045em;font-weight:900;max-width:15ch;margin:0 auto}
-h1 .grad{background:linear-gradient(100deg,#0071e3,#00a2ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{margin:24px auto 0;font-size:clamp(17px,2.1vw,22px);color:var(--gray);max-width:52ch;font-weight:400}.hero-sub b{color:var(--ink);font-weight:700}
-.demo{margin:52px auto 0;max-width:760px;background:var(--paper);border:1px solid var(--hairline);border-radius:24px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.18)}
-.demo-head{background:linear-gradient(120deg,#0f1012,#1c1d20);color:#fff;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.demo-head .t{font-size:16px;font-weight:700}
-.demo-head .live{font-family:var(--mono);font-size:11px;color:#30d158;display:flex;align-items:center;gap:7px}
-.demo-head .live::before{content:"";width:7px;height:7px;border-radius:50%;background:#30d158;animation:blink 1.6s infinite}
-@keyframes blink{50%{opacity:.3}}
-.demo-body{padding:28px 26px}
-.qinput{display:flex;gap:10px}
-.qinput input{flex:1;font-size:15px;padding:13px 16px;border:1px solid var(--hairline);border-radius:12px;font-family:var(--sans);outline:none;transition:border .2s}
-.qinput input:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-dim)}
-.qinput button{font-size:14px;font-weight:700;color:#fff;background:var(--blue);border:none;border-radius:12px;padding:13px 22px;cursor:pointer;transition:background .2s;white-space:nowrap}
-.qinput button:hover{background:#0077ed}.qinput button:disabled{opacity:.4;cursor:default}
-.suggest{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.sug{font-size:12px;font-weight:500;color:var(--gray);background:var(--canvas);border:1px solid var(--hairline);border-radius:980px;padding:6px 13px;cursor:pointer;transition:all .2s}
-.sug:hover{color:var(--ink);border-color:var(--gray)}
-.result{margin-top:22px;display:none}.result.show{display:block}
-.result .row1{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.verdict-pill{font-size:15px;font-weight:800;letter-spacing:.04em;padding:8px 18px;border-radius:980px}
-.vb-bet{color:var(--green);background:rgba(10,143,74,.1);border:1px solid rgba(10,143,74,.3)}
-.vb-pass{color:var(--amber);background:rgba(176,125,31,.1);border:1px solid rgba(176,125,31,.3)}
-.vb-blocked{color:var(--red);background:rgba(215,0,21,.08);border:1px solid rgba(215,0,21,.3)}
-.result .p{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--ink)}.result .p span{font-size:14px;color:var(--gray)}
-.summary{margin-top:14px;font-size:14px;color:var(--gray);line-height:1.6;border-left:3px solid var(--blue);padding-left:14px}
-.votes{margin-top:14px;display:flex;flex-direction:column;gap:6px}
-.vote{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--gray)}
-.vote .bar{flex:1;height:6px;background:var(--canvas);border-radius:99px;overflow:hidden}
-.vote .bar i{display:block;height:100%;background:var(--blue);border-radius:99px;transition:width .8s}
-.status-line{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--gray);min-height:18px}
-.factors{margin-top:12px;display:flex;flex-direction:column;gap:5px}
-.factor{font-size:13px;color:var(--gray);padding-left:16px;position:relative}
-.factor::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;background:var(--blue)}
-.reasoning{margin-top:12px;background:var(--canvas);border:1px solid var(--hairline);border-radius:10px;padding:12px 16px;font-family:var(--mono);font-size:11.5px;color:var(--gray);line-height:1.7;white-space:pre-wrap}
-.sources{margin-top:12px;display:flex;gap:6px;flex-wrap:wrap}
-.proof{margin-top:12px;background:rgba(10,143,74,.05);border:1px solid rgba(10,143,74,.25);border-radius:10px;padding:12px 16px;font-family:var(--mono);font-size:11.5px;color:var(--gray);line-height:1.7}
-.proof a{color:var(--blue);text-decoration:none}
-.source{font-family:var(--mono);font-size:11px;color:var(--blue);background:var(--blue-dim);padding:3px 10px;border-radius:980px}
-section{padding:96px 0}
-.sec-head{text-align:center;margin-bottom:52px}
-.sec-head .kicker{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
-.sec-head h2{font-size:clamp(30px,4vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.08}
-.sec-head p{font-size:18px;color:var(--gray);max-width:52ch;margin:16px auto 0}
-.simple{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.simp{background:var(--paper);border:1px solid var(--hairline);border-radius:18px;padding:28px 24px}
-.simp .ico{width:44px;height:44px;border-radius:11px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-.simp h3{font-size:16px;font-weight:800;letter-spacing:-.01em;margin-bottom:8px}.simp p{font-size:13.5px;color:var(--gray);line-height:1.6}
-@media(max-width:760px){.simple{grid-template-columns:1fr}}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline);border-radius:20px;overflow:hidden}
-.hm{background:var(--paper);padding:26px 20px;text-align:center}.hm .v{font-size:40px;font-weight:900;letter-spacing:-.04em}.hm .v.blue{color:var(--blue)}.hm .k{font-size:12.5px;color:var(--gray);margin-top:5px;font-weight:500}
-@media(max-width:760px){.metrics{grid-template-columns:1fr 1fr}}
-.partners{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.partner{background:var(--paper);border:1px solid var(--hairline);border-radius:16px;padding:24px}
-.partner .name{font-size:17px;font-weight:800;letter-spacing:-.01em}.partner .tag{font-family:var(--mono);font-size:11px;color:var(--blue);margin-top:2px}
-.partner .desc{font-size:13px;color:var(--gray);margin-top:10px;line-height:1.6}
-.partner .prize{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);margin-top:12px;display:block}
-@media(max-width:760px){.partners{grid-template-columns:1fr}}
-.dark-section{background:var(--dark);color:#f5f5f7;border-radius:28px;padding:60px 44px;margin:0 -12px}
-.dark-section h2{color:#f5f5f7}.dark-section p{color:#86868b}.dark-section .kicker{color:#2997ff}
-.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.pcard{background:var(--darkcard);border:1px solid #2c2c2e;border-radius:16px;padding:22px}
-.pcard h3{font-size:15px;font-weight:700;color:#f5f5f7}.pcard p{font-size:12.5px;color:#86868b;margin:6px 0 10px;line-height:1.5}
-.pcard .id{font-family:var(--mono);font-size:12.5px;color:#2997ff}.pcard a{font-family:var(--mono);font-size:12px;color:#86868b;text-decoration:none}
-@media(max-width:760px){.proof{grid-template-columns:1fr}}
-.coverage{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.cov{background:var(--paper);border:1px solid var(--hairline);border-radius:16px;padding:18px}
-.cov .t{font-size:14px;font-weight:700}.cov .p{font-family:var(--mono);font-size:11px;color:var(--gray)}
-.cov .bar{height:8px;background:var(--canvas);border-radius:99px;margin:12px 0 8px;overflow:hidden}
-.cov .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:99px;width:0;transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
-.cov .pct{font-family:var(--mono);font-size:14px;color:var(--blue);font-weight:700}
-@media(max-width:760px){.coverage{grid-template-columns:1fr 1fr}}
-table{border-collapse:collapse;width:100%;font-size:14px;background:var(--paper);border:1px solid var(--hairline);border-radius:20px;overflow:hidden}
-th,td{border-bottom:1px solid var(--hairline);padding:18px 22px;text-align:left;vertical-align:top}
-th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);background:var(--canvas);font-weight:700}
-tr:last-child td{border-bottom:none}td .mono{font-family:var(--mono);font-size:12.5px;color:var(--gray);line-height:1.7}
-.note{margin-top:20px;text-align:center;font-size:14px;color:var(--gray)}.note b{color:var(--ink)}
-footer{padding:52px 0 70px;text-align:center;border-top:1px solid var(--hairline);margin-top:30px}
-footer .f-logo{font-weight:900;font-size:18px;letter-spacing:-.02em}footer .f-logo span{color:var(--blue)}
-footer p{font-size:13px;color:var(--gray);margin-top:8px}</style></head><body>
-
-<nav><div class="nav-in">
-  <div class="nav-logo">Kairos <span>·</span> Oracle</div>
-  <div class="nav-links"><a href="#demo">Probar</a><a href="#que">Qué es</a><a href="#partners">Partners</a><a href="#prueba">Prueba</a></div>
-  <a class="nav-cta" href="#demo">Probar ahora</a>
-</div></nav>
-
-<header>
-  <div class="hero-badge"><span class="dot"></span> En vivo · motor real corriendo</div>
-  <h1>Escribe tu pregunta.<br><span class="grad">Kairos la analiza.</span></h1>
-  <p class="hero-sub">Kairos es un analista automático que investiga, calcula la probabilidad y <b>firma su respuesta en blockchain</b>. Escribe abajo cualquier pregunta sobre el mundo y míralo trabajar en vivo.</p>
-</header>
-
-<section id="demo" style="padding-top:8px">
-  <div class="demo reveal">
-    <div class="demo-head"><div class="t">Kairos, en vivo</div><div class="live">LIVE · motor real</div></div>
-    <div class="demo-body">
-      <div class="qinput">
-        <input id="q" type="text" placeholder="Ej: ¿Recortará la Fed las tasas antes de fin de 2026?" />
-        <button id="go" onclick="ask()">Analizar</button>
-      </div>
-      <div class="suggest">
-        <button class="sug" onclick="use('¿Ganará el candidato demócrata la presidencia de EE.UU. en 2028?')">¿Ganará el candidato demócrata en 2028?</button>
-        <button class="sug" onclick="use('¿Bitcoin superará los 100.000 USD este año?')">¿Bitcoin superará $100K este año?</button>
-        <button class="sug" onclick="use('¿La inflación en EE.UU. bajará del 2% en 2026?')">¿Inflación EE.UU. &lt;2% en 2026?</button>
-      </div>
-      <div class="status-line" id="status"></div>
-      <div class="result" id="result">
-        <div class="row1"><span class="verdict-pill" id="vp">PASS</span><span class="p" id="pp">—<span>%</span></span></div>
-        <div class="summary" id="sum"></div>
-        <div class="factors" id="factors"></div>
-        <div class="reasoning" id="reasoning"></div>
-        <div class="votes" id="votes"></div>
-        <div class="sources" id="sources"></div>
-        <div class="proof" id="proof"></div>
-      </div>
+<style>
+:root{--bg:#08090a;--panel:#0e1013;--panel2:#12151a;--line:#1d2128;--ink:#f5f5f7;--ink2:#8b8f98;--ink3:#62666d;--acc:#0071e3;--acc2:#2997ff;--ok:#30d158;--warn:#ffd60a;--bad:#ff453a;--mono:'SF Mono','Berkeley Mono',ui-monospace,Menlo,monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,'SF Pro Display','Inter',system-ui,sans-serif;line-height:1.5;min-height:100vh;}
+a{color:var(--acc2);text-decoration:none;border-bottom:1px solid rgba(41,151,255,.3)}a:hover{color:#7cc0ff}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 90px}
+.top{display:flex;align-items:center;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--line)}
+.logo{width:38px;height:38px;border-radius:10px;border:2px solid var(--acc);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:17px;background:radial-gradient(circle at 30% 20%,#0a2a4d,#0e1013)}
+.brand b{font-size:17px;letter-spacing:-.01em}.brand span{display:block;color:var(--ink2);font-size:12px}
+.live{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--ok);font-size:12.5px;font-family:var(--mono)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.hero{padding:52px 0 34px;text-align:center}
+.kicker{color:var(--acc2);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+h1{font-size:clamp(34px,5vw,54px);letter-spacing:-.03em;line-height:1.05;margin:14px 0 12px}
+h1 em{font-style:normal;background:linear-gradient(90deg,#2997ff,#0071e3);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--ink2);max-width:620px;margin:0 auto;font-size:16px}
+.metrics{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:26px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12.5px;color:var(--ink2);font-family:var(--mono)}
+.chip b{color:var(--ink)}
+.console{margin:34px 0 10px;background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.qrow{display:flex;gap:10px;padding:16px}
+#q{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:14px 16px;font-size:15.5px;outline:none}
+#q:focus{border-color:var(--acc)}
+#go{background:var(--acc);border:none;color:#fff;font-weight:700;font-size:14.5px;padding:0 26px;border-radius:12px;cursor:pointer;letter-spacing:.02em}
+#go:disabled{opacity:.5;cursor:default}
+.presets{padding:0 16px 14px;display:flex;flex-wrap:wrap;gap:8px}
+.presets button{background:transparent;border:1px solid var(--line);color:var(--ink2);border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer}
+.presets button:hover{color:var(--ink);border-color:var(--acc)}
+.stages{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+@media(max-width:760px){.stages{grid-template-columns:repeat(3,1fr)}}
+.st{position:relative;padding:16px 10px;text-align:center;color:var(--ink3);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;transition:.25s}
+.st b{display:block;font-family:var(--mono);font-size:10px;color:var(--acc);margin-bottom:4px;opacity:0}
+.st.on{color:var(--ink);background:linear-gradient(180deg,rgba(0,113,227,.12),transparent)}
+.st.on b{opacity:1}
+.st.done{color:var(--ok)}
+.st.done::after{content:'✓';position:absolute;right:8px;top:8px;font-size:10px}
+.body{padding:22px 24px;min-height:220px}
+.wait{color:var(--ink2);font-size:14px;font-family:var(--mono)}
+.wait .timer{color:var(--acc2)}
+.votes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media(max-width:760px){.votes{grid-template-columns:1fr}}
+.vote{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;animation:vin .45s ease}
+@keyframes vin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.vote .m{font-size:12px;color:var(--ink2);font-family:var(--mono);word-break:break-all}
+.vote .bar{height:7px;background:var(--line);border-radius:99px;margin:9px 0 5px;overflow:hidden}
+.vote .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:99px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.vote .v{font-size:19px;font-family:var(--mono);font-weight:700}
+.result{display:grid;grid-template-columns:200px 1fr;gap:26px;align-items:start}
+@media(max-width:760px){.result{grid-template-columns:1fr}}
+.bigp{text-align:center}
+.bigp .num{font-size:76px;font-family:var(--mono);font-weight:700;letter-spacing:-.04em;color:#fff}
+.bigp .num span{font-size:30px;color:var(--ink3)}
+.bigp .lab{color:var(--ink2);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.verdict{display:inline-block;margin-top:10px;padding:6px 18px;border-radius:999px;font-weight:800;font-size:14px;letter-spacing:.08em}
+.vb-bet{background:rgba(48,209,88,.14);color:var(--ok);border:1px solid rgba(48,209,88,.4)}
+.vb-pass{background:rgba(255,214,10,.12);color:var(--warn);border:1px solid rgba(255,214,10,.35)}
+.vb-blocked{background:rgba(255,69,58,.12);color:var(--bad);border:1px solid rgba(255,69,58,.4)}
+.det{min-width:0}
+.det h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:14px 0 8px}
+.det h3:first-child{margin-top:0}
+.sum{font-size:16px;color:#dfe2e7;line-height:1.55}
+.factors{display:flex;flex-wrap:wrap;gap:8px}
+.factor{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:7px 11px;font-size:12.5px;color:var(--ink2)}
+.trace{background:#000;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:12px;color:#9aa3ad;white-space:pre-wrap;max-height:220px;overflow:auto}
+.proof{font-family:var(--mono);font-size:12px;color:var(--ink2);line-height:1.7;word-break:break-all}
+.proof .ok{color:var(--ok)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+.card h2{font-size:17px;letter-spacing:-.01em;margin-bottom:12px}
+.card p{color:var(--ink2);font-size:14px;margin:6px 0}
+.num{font-family:var(--mono)}
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:10px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+th{color:var(--ink3);font-size:11px;text-transform:uppercase;letter-spacing:.06em;background:var(--panel2)}
+td{color:#c9ccd2}
+.foot{margin-top:50px;color:var(--ink3);font-size:12.5px;text-align:center;border-top:1px solid var(--line);padding-top:20px}
+.hidden{display:none}
+.err{color:var(--bad);font-size:14px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class='wrap'>
+  <div class='top'>
+    <div class='logo'>K</div>
+    <div class='brand'><b>Kairos Oracle</b><span>Analista automático con firma on-chain</span></div>
+    <div class='live'><span class='dot'></span>MOTOR EN VIVO</div>
+  </div>
+  <div class='hero'>
+    <div class='kicker'>Predicciones verificables</div>
+    <h1>Pregúntale al mercado.<br>Kairos <em>lo investiga, lo vota y lo firma.</em></h1>
+    <p>Un comité de 4 modelos independientes analiza la pregunta con datos vivos, calibra la probabilidad, aplica disciplina de riesgo y firma el veredicto en Hedera. Todo lo que ves abajo es real — cada voto aterriza en pantalla en el momento en que el modelo termina.</p>
+    <div class='metrics'>
+      <span class='chip'>Comité <b>3+1</b> modelos</span>
+      <span class='chip'>Calibración <b>Platt</b></span>
+      <span class='chip'>Kelly <b>α=0.25</b></span>
+      <span class='chip'>2 pagos x402 <b>settleados</b></span>
+      <span class='chip'>A/B The Graph <b>publicado</b></span>
     </div>
   </div>
-</section>
 
-<section id="que">
-  <div class="sec-head reveal"><div class="kicker">Qué es</div><h2>Un analista que no puede mentir.</h2><p>Tres cosas simples, sin jerga.</p></div>
-  <div class="simple">
-    <div class="simp reveal"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div><h3>Investiga</h3><p>Busca noticias y datos reales sobre tu pregunta antes de opinar.</p></div>
-    <div class="simp reveal"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg></div><h3>Calcula probabilidad</h3><p>Cinco modelos de IA opinan y se combinan en un número honesto.</p></div>
-    <div class="simp reveal"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><h3>Firma y registra</h3><p>Su respuesta queda firmada y sellada en Hedera. Nadie puede alterarla.</p></div>
+  <div class='console'>
+    <div class='qrow'>
+      <input id='q' placeholder='Escribe tu pregunta — por ejemplo: ¿ETH superará 10k USD en 2026?' />
+      <button id='go' onclick='ask()'>Analizar</button>
+    </div>
+    <div class='presets'>
+      <button onclick="use('Will ETH hit 10k USD in 2026?')">ETH 10k en 2026</button>
+      <button onclick="use('Will Bitcoin close above 150k USD in 2026?')">BTC 150k en 2026</button>
+      <button onclick="use('Will Uniswap monthly DEX volume on Ethereum grow in October 2026?')">Volumen DEX de Uniswap</button>
+    </div>
+    <div class='stages' id='stages'>
+      <div class='st' id='st0'><b>01</b>Investigación</div>
+      <div class='st' id='st1'><b>02</b>Comité</div>
+      <div class='st' id='st2'><b>03</b>Calibración</div>
+      <div class='st' id='st3'><b>04</b>Decisión</div>
+      <div class='st' id='st4'><b>05</b>Firma</div>
+      <div class='st' id='st5'><b>06</b>Ancla HCS</div>
+    </div>
+    <div class='body' id='body'>
+      <div class='wait' id='wait'>Listo para tu pregunta. El motor tarda ~90 segundos: mientras tanto verás cada etapa real del pipeline.</div>
+      <div class='votes' id='votes'></div>
+      <div class='result hidden' id='result'>
+        <div class='bigp'>
+          <div class='num' id='bigp'>0<span>%</span></div>
+          <div class='lab'>probabilidad calibrada</div>
+          <div id='vp' class='verdict vb-pass'>—</div>
+        </div>
+        <div class='det'>
+          <h3>Lectura</h3><div class='sum' id='sum'></div>
+          <h3>Factores</h3><div class='factors' id='factors'></div>
+          <h3>Fuentes</h3><div class='factors' id='sources'></div>
+          <h3>Rastro de decisión</h3><div class='trace' id='reasoning'></div>
+          <h3>Prueba on-chain</h3><div class='proof' id='proof'></div>
+        </div>
+      </div>
+      <div class='err hidden' id='err'></div>
+    </div>
   </div>
-  <div class="metrics" style="margin-top:44px">
-    <div class="hm reveal"><div class="v blue">10,537</div><div class="k">predicciones hechas</div></div>
-    <div class="hm reveal"><div class="v">333</div><div class="k">preguntas distintas</div></div>
-    <div class="hm reveal"><div class="v">5</div><div class="k">competiciones en vivo</div></div>
-    <div class="hm reveal"><div class="v">$0</div><div class="k">tu dinero en riesgo</div></div>
+
+  <div class='cols'>
+    <div class='card'>
+      <h2>Calibración medida, no prometida</h2>
+      <table>
+        <tr><th>Métrica</th><th>Valor</th></tr>
+        <tr><td>A/B The Graph (Brier, n=12)</td><td class='num'>0.2169 con evidencia · 0.2002 sin · Δ +0.0168 — publicado con lectura honesta</td></tr>
+        <tr><td>Comité</td><td>DeepSeek v4-flash · Claude Opus 5 · GPT-5.6 Luna · GLM-4.7 (desempate)</td></tr>
+        <tr><td>Disciplina</td><td>Kelly α=0.25 · drawdown 15% · pérdida diaria 5% · rechazos firmados</td></tr>
+      </table>
+      <p style='margin-top:12px'>El sistema publica sus rechazos — incluidos los scores desfavorables — porque la calibración real se demuestra con números, no con promesas.</p>
+    </div>
+    <div class='card'>
+      <h2>Pagar por un forecast (x402)</h2>
+      <p>El mismo motor se vende por llamada: HTTP 402 con requisitos x402, settlement real vía el facilitador Blocky402 en Hedera testnet.</p>
+      <table>
+        <tr><th>Campo</th><th>Valor</th></tr>
+        <tr><td>Precio</td><td class='num'>100000 tinybar (0.001 HBAR)</td></tr>
+        <tr><td>payTo</td><td class='num'>0.0.10107589</td></tr>
+        <tr><td>Fee payer (facilitador)</td><td class='num'>0.0.7162784</td></tr>
+      </table>
+      <p style='margin-top:12px'>Prueba: <span class='num'>curl https://ialanreynoso.tail3a9281.ts.net/v1/forecast?question=…</span> → 402 + requisitos. Paga y recibes el forecast firmado + audit trail en HCS. <a href='https://hashscan.io/testnet/transaction/0.0.7162784@1788631480.119182348' target='_blank'>Settlement #1</a> · <a href='https://hashscan.io/testnet/transaction/0.0.7162784@1788631598.935375690' target='_blank'>#2</a></p>
+    </div>
   </div>
-</section>
-
-<section id="partners">
-  <div class="sec-head reveal"><div class="kicker">Tecnología</div><h2>Construido sobre lo mejor.</h2><p>Tres socios tecnológicos reales, integrados de verdad.</p></div>
-  <div class="partners">
-    <div class="partner reveal"><div class="name">Hedera</div><div class="tag">CONSENSUS · SCHEDULE · FILE</div><p class="desc">La red que ordena y sella cada predicción con marca de tiempo. La siguiente acción la ejecuta la propia red, sin servidores.</p><span class="prize">Track: Continuity $1K · x402 $6K</span></div>
-    <div class="partner reveal"><div class="name">The Graph</div><div class="tag">LIVE ON-CHAIN DATA</div><p class="desc">Datos blockchain en tiempo real como evidencia para las predicciones de crypto y protocolos.</p><span class="prize">Track: AI Use Case Continuity $5K</span></div>
-    <div class="partner reveal"><div class="name">Ledger</div><div class="tag">HARDWARE TRUST</div><p class="desc">Confirmación por dispositivo en las decisiones irreversibles: un humano aprueba lo que importa.</p><span class="prize">Track: Continuity $1.5K · AI Agents $3.5K</span></div>
+  <div class='cols'>
+    <div class='card'>
+      <h2>Prueba on-chain</h2>
+      <p>Cada digesto de forecast queda anclado en Hedera Consensus Service <span class='num'>0.0.10374210</span> antes de que la pregunta cierre. <a href='https://hashscan.io/testnet/topic/0.0.10374210' target='_blank'>Ver topic en Hashscan</a> · <a href='https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10374210/messages' target='_blank'>Mirror node</a></p>
+      <p>Repo público (todo el trabajo nuevo open source): <a href='https://github.com/iAlanReynoso/kairos-ethonline' target='_blank'>github.com/iAlanReynoso/kairos-ethonline</a></p>
+    </div>
+    <div class='card'>
+      <h2>Cómo decide</h2>
+      <p class='num' style='font-size:13px;line-height:1.9'>pregunta → investigación (noticias + contexto + The Graph live)<br>→ comité 3+1 (log-odds pooling, trim de extremos)<br>→ Platt + anclaje al mercado<br>→ Kelly α=0.25 + gates de riesgo (drawdown 15%, pérdida diaria 5%)<br>→ BET / PASS / BLOCKED → firma EIP-191<br>→ ancla HCS</p>
+    </div>
   </div>
-</section>
 
-<section id="prueba" class="dark-section">
-  <div class="sec-head reveal"><div class="kicker">La prueba</div><h2>Todo queda registrado.</h2><p>Las predicciones no viven en un servidor privado: viven en Hedera, una red pública que cualquiera puede inspeccionar.</p></div>
-  <div class="proof">
-    <div class="pcard reveal"><h3>Predicciones ancladas</h3><p>Cada predicción se registra antes de conocerse la respuesta.</p><div class="id">topic 0.0.10213059</div><a href="https://hashscan.io/testnet/topic/0.0.10213059" target="_blank">ver en Hashscan →</a></div>
-    <div class="pcard reveal"><h3>Ejecutado por la red</h3><p>La siguiente acción la ejecuta la red, sin servidores nuestros.</p><div class="id">schedule 0.0.10114149</div><a href="https://hashscan.io/testnet/schedule/0.0.10114149" target="_blank">ver en Hashscan →</a></div>
-    <div class="pcard reveal"><h3>Recibo guardado</h3><p>El comprobante completo queda guardado y sellado.</p><div class="id">file 0.0.10215927</div><a href="https://hashscan.io/testnet/file/0.0.10215927" target="_blank">ver en Hashscan →</a></div>
-  </div>
-</section>
-
-<section id="resultados">
-  <div class="sec-head reveal"><div class="kicker">Resultados</div><h2>Compitiendo hoy, en serio.</h2><p>Kairos participa en torneos reales de predicción, completamente solo.</p></div>
-  <div class="coverage reveal">
-    <div class="cov"><div class="t">AIB · FutureEval</div><div class="p">$50K · solo bots</div><div class="bar"><i data-w="100%"></i></div><div class="pct">en vivo</div></div>
-    <div class="cov"><div class="t">POTUS</div><div class="p">$15K</div><div class="bar"><i data-w="82%"></i></div><div class="pct">27/33 · 82%</div></div>
-    <div class="cov"><div class="t">ACX 2026</div><div class="p">$10K</div><div class="bar"><i data-w="100%"></i></div><div class="pct">26/26 · 100%</div></div>
-    <div class="cov"><div class="t">Midterms</div><div class="p">$10K</div><div class="bar"><i data-w="100%"></i></div><div class="pct">12/12 · 100%</div></div>
-  </div>
-  <div class="note reveal" style="margin-top:32px"><b>La parte honesta:</b> Kairos muestra su puntuación real, incluso cuando es negativa. Una reputación que puedes comprobar es el producto.</div>
-</section>
-
-<footer>
-  <div class="f-logo">Kairos <span>·</span> Oracle</div>
-  <p>Hecho para ETHOnline 2026 · Continuity (Hedera). No es consejo financiero. Red de pruebas. $0 en riesgo.</p>
-</footer>
-
-<script>var API='https://ialanreynoso.tail3a9281.ts.net/forecast';
+  <div class='foot'>Kairos Oracle · ETHOnline 2026 · Continuity track · Hedera + The Graph + Ledger · MIT</div>
+</div>
+<script>
+var API='https://ialanreynoso.tail3a9281.ts.net/forecast/stream';
+var stageMap={research:0,committee:1,calibration:2,decision:3,signature:4,anchor:5};
+var t0=0,timerInt=null;
 function use(q){document.getElementById('q').value=q;ask();}
+function setStage(n,state){var ids=['st0','st1','st2','st3','st4','st5'];ids.forEach(function(id,i){var el=document.getElementById(id);el.classList.remove('on','done');if(state==='done'&&i<=n){el.classList.add('done');}else if(state==='on'&&i===n){el.classList.add('on');}});}
+function votesBox(){var v=document.getElementById('votes');v.innerHTML='';}
+function addVote(modelo,p){
+  var v=document.getElementById('votes');
+  var d=document.createElement('div');d.className='vote';
+  var m=document.createElement('div');m.className='m';m.textContent=modelo;
+  var bar=document.createElement('div');bar.className='bar';var i=document.createElement('i');bar.appendChild(i);
+  var val=document.createElement('div');val.className='v';val.textContent=Math.round(p*100)+'%';
+  d.appendChild(m);d.appendChild(bar);d.appendChild(val);v.appendChild(d);
+  setTimeout(function(){i.style.width=(p*100)+'%';},30);
+}
+function animateNum(el,target){var st=performance.now(),from=0,dur=900;function f(now){var k=Math.min(1,(now-st)/dur);k=1-Math.pow(1-k,3);el.innerHTML=Math.round(target*k)+'<span>%</span>';if(k<1)requestAnimationFrame(f);}requestAnimationFrame(f);}
 function ask(){
   var q=document.getElementById('q').value.trim();
-  if(q.length<5){document.getElementById('status').textContent='Escribe una pregunta primero.';return;}
-  var go=document.getElementById('go'), st=document.getElementById('status'), res=document.getElementById('result');
-  go.disabled=true; st.textContent='Investigando y consultando el comité…'; res.classList.remove('show');
+  var err=document.getElementById('err'),wait=document.getElementById('wait'),res=document.getElementById('result'),go=document.getElementById('go');
+  if(q.length<5){wait.textContent='Escribe una pregunta primero.';return;}
+  go.disabled=true;err.classList.add('hidden');res.classList.add('hidden');votesBox();
+  setStage(0,'on');wait.textContent='Arrancando el pipeline…';t0=Date.now();
+  timerInt=setInterval(function(){var s=Math.floor((Date.now()-t0)/1000);wait.textContent='Trabajando · '+s+'s — cada voto del comité aparece aquí cuando el modelo termina.';},1000);
   fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})})
-  .then(function(r){return r.json();})
-  .then(function(d){
-    if(d.error){st.textContent='Error: '+d.error;go.disabled=false;return;}
-    st.textContent='Listo — decisión real del motor, en vivo.';
-    var vp=document.getElementById('vp'), pp=document.getElementById('pp'), sum=document.getElementById('sum'), votes=document.getElementById('votes');
-    vp.textContent=d.verdict;
-    vp.className='verdict-pill '+(d.verdict==='BET'?'vb-bet':d.verdict==='PASS'?'vb-pass':'vb-blocked');
-    pp.innerHTML=(Math.round(d.p*100))+'<span>%</span>';
-    sum.textContent=d.summary||'';
-    var fhtml='';(d.factors||[]).forEach(function(f){fhtml+='<div class="factor">'+f+'</div>';});
-    document.getElementById('factors').innerHTML=fhtml;
-    var html='';
-    (d.votos||[]).forEach(function(v){html+='<div class="vote"><span>'+v.modelo+'</span><div class="bar"><i style="width:'+Math.round(v.p_yes*100)+'%"></i></div><span>'+Math.round(v.p_yes*100)+'%</span></div>';});
-    votes.innerHTML=html;
-    var shtml='';(d.fuentes||[]).forEach(function(s){shtml+='<span class="source">'+s+'</span>';});
-    document.getElementById('sources').innerHTML=shtml;
-    var rhtml=(d.reasoning||[]).join('\n');
-    document.getElementById('reasoning').textContent=rhtml;
-    var ph='';
-    if(d.signature){ph+='Firmado EIP-191 · '+d.signature.signer+'\n';ph+='digest '+d.signature.digest+'\n';}
-    if(d.anchor && d.anchor.hashscan){ph+='Anclado en Hedera · <a href="'+d.anchor.hashscan+'" target="_blank">'+d.anchor.topic_id+' → ver en Hashscan</a>';}
-    document.getElementById('proof').innerHTML=ph;
-    res.classList.add('show');
-    go.disabled=false;
+  .then(function(r){
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var reader=r.body.getReader(),dec=new TextDecoder(),buf='';
+    function pump(){return reader.read().then(function(x){
+      if(x.done)return;
+      buf+=dec.decode(x.value,{stream:true});
+      var parts=buf.split('\n\n');buf=parts.pop();
+      parts.forEach(function(p){if(p.indexOf('data:')===0){handle(JSON.parse(p.slice(5)));}});
+      return pump();
+    });}
+    return pump();
   })
-  .catch(function(e){st.textContent='No se pudo conectar al motor: '+e.message+'. Reintenta en unos segundos (el servicio se reinicia solo si cayó).';go.disabled=false;});
+  .catch(function(e){clearInterval(timerInt);err.textContent='No se pudo conectar al motor: '+e.message+'. Reintenta en unos segundos (el servicio se reinicia solo si cayó).';err.classList.remove('hidden');go.disabled=false;wait.textContent='Reintenta la consulta.';});
 }
-(function(){var els=document.querySelectorAll('.reveal');var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.12});els.forEach(function(el){io.observe(el);});})();
-(function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=e.target;i.style.width=i.getAttribute('data-w');io.unobserve(i);}});},{threshold:.3});document.querySelectorAll('.cov .bar i').forEach(function(b){b.style.width='0';io.observe(b);});})();</script></body></html>
+function handle(ev){
+  var wait=document.getElementById('wait'),go=document.getElementById('go');
+  if(ev.type==='stage'){
+    var n=stageMap[ev.name];if(n!==undefined)setStage(n,'on');
+    if(ev.name==='committee'){wait.textContent='El comité está votando — 4 modelos independientes…';setStage(1,'on');}
+    if(ev.name==='anchor'){wait.textContent=ev.label||'Anclando en Hedera…';}
+    if(ev.label&&ev.name!=='anchor'){wait.textContent=ev.label;}
+  }
+  if(ev.type==='vote'){addVote(ev.modelo,ev.p_yes);}
+  if(ev.type==='decision'){setStage(3,'done');}
+  if(ev.type==='signature'){setStage(4,'done');}
+  if(ev.type==='anchor'){setStage(5,'done');}
+  if(ev.type==='done'){render(ev.result);}
+  if(ev.type==='error'){clearInterval(timerInt);document.getElementById('err').textContent='Error del motor: '+ev.message;document.getElementById('err').classList.remove('hidden');go.disabled=false;}
+}
+function render(d){
+  clearInterval(timerInt);
+  var wait=document.getElementById('wait'),res=document.getElementById('result'),go=document.getElementById('go');
+  setStage(5,'done');
+  wait.textContent='Completado en '+Math.floor((Date.now()-t0)/1000)+'s — decisión firmada y anclada.';
+  document.getElementById('vp').textContent=d.verdict;
+  document.getElementById('vp').className='verdict '+(d.verdict==='BET'?'vb-bet':d.verdict==='PASS'?'vb-pass':'vb-blocked');
+  animateNum(document.getElementById('bigp'),Math.round(d.decision_p*100));
+  document.getElementById('sum').textContent=d.summary||'';
+  var f='';(d.factors||[]).forEach(function(x){f+='<div class="factor">'+x+'</div>';});document.getElementById('factors').innerHTML=f;
+  var s='';(d.fuentes||[]).forEach(function(x){s+='<div class="factor">'+x+'</div>';});document.getElementById('sources').innerHTML=s;
+  document.getElementById('reasoning').textContent=(d.reasoning||[]).join('\n');
+  var ph='';
+  if(d.signature){ph+='Firmado EIP-191 · '+d.signature.signer+'<br>digest '+d.signature.digest+'<br>';}
+  if(d.anchor&&d.anchor.hashscan){ph+='<span class="ok">✓ Anclado en Hedera</span> · <a href="'+d.anchor.hashscan+'" target="_blank">'+d.anchor.topic_id+' → Hashscan</a>';}
+  if(d.device_confirmation==='pending'){ph+='<br><span style="color:#ffd60a">Esperando confirmación en dispositivo (Ledger) para ejecutar.</span>';}
+  document.getElementById('proof').innerHTML=ph;
+  res.classList.remove('hidden');go.disabled=false;
+}
+</script>
+</body></html>
