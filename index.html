@@ -101,6 +101,25 @@ td{color:#c9ccd2}
 .pcard .pl{font-family:var(--mono);font-size:11.5px;color:var(--acc2)}
 .icon{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);margin-bottom:10px;color:var(--acc2)}
 .icon svg{width:17px;height:17px}
+
+body{background:radial-gradient(1400px 700px at 12% -8%,rgba(0,113,227,.16),transparent 55%),radial-gradient(1000px 600px at 100% 0%,rgba(41,151,255,.07),transparent 50%),radial-gradient(1200px 900px at 50% 120%,rgba(103,71,237,.08),transparent 55%),var(--bg);}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(1200px 800px at 50% -10%,#000 20%,transparent 80%);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1}
+.pcard .plogo{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden}
+.pcard .plogo img{width:100%;height:100%;object-fit:contain}
+.pcard.ledger .plogo{background:#0b0c0e;border:1px solid #3a3d42}
+.pcard.ledger .plogo b{color:#fff;font-size:16px;font-weight:800}
+.const{position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:560px;height:200px;opacity:.5;pointer-events:none}
+.topics{margin:26px 0 8px}
+.topics h2{font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin:0 0 12px;display:flex;align-items:center;gap:10px}
+.topics h2::after{content:'';flex:1;height:1px;background:var(--line)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:760px){.tgrid{grid-template-columns:1fr}}
+.topic{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 16px;cursor:pointer;transition:.18s;text-align:left}
+.topic:hover{border-color:var(--acc);transform:translateY(-2px)}
+.topic .tag{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc2);border:1px solid rgba(41,151,255,.35);border-radius:999px;padding:2px 9px;margin-bottom:8px;font-family:var(--mono)}
+.topic .tq{font-size:13.5px;color:#dfe2e7;line-height:1.45}
+.hint{color:var(--ink3);font-size:12px;margin:10px 16px 0;font-family:var(--mono)}
 </style>
 </head>
 <body>
@@ -110,7 +129,20 @@ td{color:#c9ccd2}
     <div class='brand'><b>Kairos Oracle</b><span>Analista automático con firma on-chain</span></div>
     <div class='live'><span class='dot'></span>MOTOR EN VIVO</div>
   </div>
-  <div class='hero'>
+  <div class='hero'>  <svg class='const' viewBox='0 0 560 200'>
+    <g stroke='rgba(41,151,255,.35)' stroke-width='1'>
+      <line x1='280' y1='100' x2='120' y2='40'/><line x1='280' y1='100' x2='440' y2='40'/>
+      <line x1='280' y1='100' x2='120' y2='160'/><line x1='280' y1='100' x2='440' y2='160'/>
+      <line x1='120' y1='40' x2='440' y2='160'/><line x1='440' y1='40' x2='120' y2='160'/>
+    </g>
+    <circle cx='280' cy='100' r='7' fill='#0071e3'/>
+    <circle cx='120' cy='40' r='5' fill='#2997ff'><animate attributeName='r' values='5;7;5' dur='3s' repeatCount='indefinite'/></circle>
+    <circle cx='440' cy='40' r='5' fill='#2997ff'><animate attributeName='r' values='5;7;5' dur='2.6s' repeatCount='indefinite'/></circle>
+    <circle cx='120' cy='160' r='5' fill='#6747ed'><animate attributeName='r' values='5;7;5' dur='3.4s' repeatCount='indefinite'/></circle>
+    <circle cx='440' cy='160' r='5' fill='#8f7bff'><animate attributeName='r' values='5;7;5' dur='2.9s' repeatCount='indefinite'/></circle>
+    <text x='280' y='130' text-anchor='middle' fill='#8b8f98' font-size='10' font-family='monospace'>comité 3+1</text>
+  </svg>
+
     <div class='emblem'>
     <svg width='74' height='74' viewBox='0 0 74 74'><defs><linearGradient id='kg' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#2997ff'/><stop offset='1' stop-color='#0071e3'/></linearGradient></defs>
     <circle cx='37' cy='37' r='33' fill='none' stroke='url(#kg)' stroke-width='2.5'/>
@@ -133,9 +165,9 @@ td{color:#c9ccd2}
   </div>
 
   <div class='partners'>
-    <div class='pcard hedera'><div class='pn'>HEDERA</div><div class='pd'>HCS para anclar cada digesto antes del cierre · Schedule Service · HFS · pago x402 settleado vía Blocky402.</div><div class='pl'>2 settlements reales → Hashscan</div></div>
-    <div class='pcard graph'><div class='pn'>THE GRAPH</div><div class='pd'>Subgraphs estandarizados Messari como evidencia on-chain viva del comité. Nunca mockeado.</div><div class='pl'>A/B Brier publicado con delta honesto</div></div>
-    <div class='pcard ledger'><div class='pn'>LEDGER</div><div class='pd'>Confirmación por dispositivo frente a las acciones de alto riesgo · Key Ring como backend de secretos.</div><div class='pl'>wallet-cli 2.1.0 · gate cableado</div></div>
+    <div class='pcard hedera'><div class='plogo'><img alt='Hedera' src='data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%202500%202500%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C/style%3E%3C/defs%3E%3Ctitle%3Ehedera--logo%3C/title%3E%3Cg%20id%3D%22Layer_2%22%20data-name%3D%22Layer%202%22%3E%3Cg%20id%3D%22Layer_1-2%22%20data-name%3D%22Layer%201%22%3E%3Cpath%20d%3D%22M1250%2C0C559.64%2C0%2C0%2C559.64%2C0%2C1250S559.64%2C2500%2C1250%2C2500s1250-559.64%2C1250-1250S1940.36%2C0%2C1250%2C0%22/%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M1758.12%2C1790.62H1599.38V1453.13H900.62v337.49H741.87V696.25H900.62v329.37h698.76V696.25h158.75Zm-850-463.75h698.75V1152.5H908.12Z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E'/></div><div class='pn'>HEDERA</div><div class='pd'>HCS para anclar cada digesto antes del cierre · Schedule Service · HFS · pago x402 settleado vía Blocky402.</div><div class='pl'>2 settlements reales → Hashscan</div></div>
+    <div class='pcard graph'><div class='plogo'><img alt='The Graph' src='data:image/svg+xml;utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2023.0.3%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22GRT%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2096%2096%22%20style%3D%22enable-background%3Anew%200%200%2096%2096%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cstyle%20type%3D%22text/css%22%3E%0A%09.st0%7Bfill%3A%236747ED%3B%7D%0A%09.st1%7Bfill-rule%3Aevenodd%3Bclip-rule%3Aevenodd%3Bfill%3A%23FFFFFF%3B%7D%0A%3C/style%3E%0A%3Ccircle%20class%3D%22st0%22%20cx%3D%2248%22%20cy%3D%2248%22%20r%3D%2248%22/%3E%0A%3Cg%20id%3D%22Symbols%22%3E%0A%09%3Cg%20transform%3D%22translate%28-88.000000%2C%20-52.000000%29%22%3E%0A%09%09%3Cpath%20id%3D%22Fill-19%22%20class%3D%22st1%22%20d%3D%22M135.3%2C106.2c-7.1%2C0-12.8-5.7-12.8-12.8c0-7.1%2C5.7-12.8%2C12.8-12.8c7.1%2C0%2C12.8%2C5.7%2C12.8%2C12.8%0A%09%09%09C148.1%2C100.5%2C142.4%2C106.2%2C135.3%2C106.2%20M135.3%2C74.2c10.6%2C0%2C19.2%2C8.6%2C19.2%2C19.2s-8.6%2C19.2-19.2%2C19.2c-10.6%2C0-19.2-8.6-19.2-19.2%0A%09%09%09S124.7%2C74.2%2C135.3%2C74.2z%20M153.6%2C113.6c1.3%2C1.3%2C1.3%2C3.3%2C0%2C4.5l-12.8%2C12.8c-1.3%2C1.3-3.3%2C1.3-4.5%2C0c-1.3-1.3-1.3-3.3%2C0-4.5l12.8-12.8%0A%09%09%09C150.3%2C112.3%2C152.4%2C112.3%2C153.6%2C113.6z%20M161%2C77.4c0%2C1.8-1.4%2C3.2-3.2%2C3.2c-1.8%2C0-3.2-1.4-3.2-3.2s1.4-3.2%2C3.2-3.2%0A%09%09%09C159.5%2C74.2%2C161%2C75.6%2C161%2C77.4z%22/%3E%0A%09%3C/g%3E%0A%3C/g%3E%0A%3C/svg%3E%0A'/></div><div class='pn'>THE GRAPH</div><div class='pd'>Subgraphs estandarizados Messari como evidencia on-chain viva del comité. Nunca mockeado.</div><div class='pl'>A/B Brier publicado con delta honesto</div></div>
+    <div class='pcard ledger'><div class='plogo'><b>L</b></div><div class='pn'>LEDGER</div><div class='pd'>Confirmación por dispositivo frente a las acciones de alto riesgo · Key Ring como backend de secretos.</div><div class='pl'>wallet-cli 2.1.0 · gate cableado</div></div>
   </div>
   <div class='console'>
     <div class='qrow'>
@@ -176,6 +208,19 @@ td{color:#c9ccd2}
     </div>
   </div>
 
+
+  <div class='topics'>
+    <h2>Temas donde Kairos es fuerte</h2>
+    <div class='tgrid'>
+      <button class='topic' onclick="use('Will Ethereum hit 10k USD before the end of 2026?')"><span class='tag'>Crypto</span><span class='tq'>¿ETH superará 10,000 USD antes de que termine 2026?</span></button>
+      <button class='topic' onclick="use('Will Bitcoin close above 150k USD in 2026?')"><span class='tag'>Crypto</span><span class='tq'>¿Bitcoin cerrará 2026 por encima de 150,000 USD?</span></button>
+      <button class='topic' onclick="use('Will Uniswap monthly DEX volume on Ethereum grow in October 2026?')"><span class='tag'>DeFi</span><span class='tq'>¿El volumen DEX de Uniswap crecerá en octubre de 2026?</span></button>
+      <button class='topic' onclick="use('Will Aave total value locked grow in October 2026?')"><span class='tag'>DeFi</span><span class='tq'>¿El TVL de Aave crecerá en octubre de 2026?</span></button>
+      <button class='topic' onclick="use('Will the US Federal Reserve cut rates at its next meeting?')"><span class='tag'>Macro</span><span class='tq'>¿La Fed recortará tasas en su próxima reunión?</span></button>
+      <button class='topic' onclick="use('Will a major AI lab release a new frontier model before the end of 2026?')"><span class='tag'>IA</span><span class='tq'>¿Un laboratorio líder lanzará un modelo frontera antes de fin de 2026?</span></button>
+    </div>
+    <div class='hint'>Formato ideal: preguntas binarias con cierre definido (¿sí o no?). Kairos investiga fuentes vivas, el comité vota, y recibes la probabilidad calibrada + veredicto firmado.</div>
+  </div>
   <div class='cols'>
     <div class='card'>
       <span class='icon'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 3a9 9 0 1 0 9 9'/><path d='M12 7l3.5 5H8.5z'/></svg></span><h2>Calibración medida, no prometida</h2>
