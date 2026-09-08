@@ -165,6 +165,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .cbadge b{color:var(--ok)}
 .card{height:100%}
 @media(max-width:900px){.hero{grid-template-columns:1fr}.partners{grid-template-columns:repeat(2,1fr)}}
+.pwrap{height:5px;background:var(--line);border-radius:99px;margin:12px 0 6px;overflow:hidden;opacity:0;transition:opacity .3s}
+.pwrap.on{opacity:1}
+.pbar{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.pbar.ind{width:40%!important;animation:slide 1.4s infinite linear}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+.tick{font-family:var(--mono);font-size:12px;color:var(--acc2);margin-left:10px}
+.tick b{color:#fff}
 </style>
 </head>
 <body>
@@ -221,6 +228,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class='st' id='st4'><b>05</b>Firma</div>
       <div class='st' id='st5'><b>06</b>Ancla HCS</div>
     </div>
+    <div class='pwrap' id='pwrap'><div class='pbar ind' id='pbar'></div></div>
+    <div class='tick' id='tick' style='margin:4px 0 10px;display:none'>MOTOR OPERANDO · <b id='tsec'>0</b>s · votos <b id='tvotes'>0</b>/4</div>
     <div class='body' id='body'>
       <div class='wait' id='wait'>Listo para tu pregunta. El motor tarda ~90 segundos: mientras tanto verás cada etapa real del pipeline.</div>
       <div class='votes' id='votes'></div>
@@ -335,7 +344,7 @@ function ask(){
   if(q.length<5){wait.textContent='Escribe una pregunta primero.';return;}
   go.disabled=true;err.classList.add('hidden');res.classList.add('hidden');votesBox();
   setStage(0,'on');wait.textContent='Arrancando el pipeline…';t0=Date.now();
-  timerInt=setInterval(function(){var s=Math.floor((Date.now()-t0)/1000);wait.textContent='Trabajando · '+s+'s — cada voto del comité aparece aquí cuando el modelo termina.';},1000);
+  timerInt=setInterval(function(){var s=Math.floor((Date.now()-t0)/1000);document.getElementById('tsec').textContent=s;wait.textContent='Trabajando · '+s+'s — cada voto del comité aparece aquí cuando el modelo termina.';},1000);document.getElementById('pwrap').classList.add('on');document.getElementById('pbar').classList.add('ind');document.getElementById('tick').style.display='block';document.getElementById('tsec').textContent='0';document.getElementById('tvotes').textContent='0';
   fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})})
   .then(function(r){
     if(!r.ok)throw new Error('HTTP '+r.status);
@@ -353,13 +362,18 @@ function ask(){
 }
 function handle(ev){
   var wait=document.getElementById('wait'),go=document.getElementById('go');
+  var pbar=document.getElementById('pbar'),tv=document.getElementById('tvotes');
   if(ev.type==='stage'){
-    var n=stageMap[ev.name];if(n!==undefined)setStage(n,'on');
+    var n=stageMap[ev.name];
+    if(n!==undefined)setStage(n,'on');
+    if(ev.name==='research'){pbar.classList.remove('ind');pbar.style.width='12%';}
     if(ev.name==='committee'){wait.textContent='El comité está votando — 4 modelos independientes…';setStage(1,'on');}
-    if(ev.name==='anchor'){wait.textContent=ev.label||'Anclando en Hedera…';}
+    if(ev.name==='calibration'){pbar.style.width='80%';}
+    if(ev.name==='signature'){pbar.style.width='94%';}
+    if(ev.name==='anchor'){pbar.style.width='98%';wait.textContent=ev.label||'Anclando en Hedera…';}
     if(ev.label&&ev.name!=='anchor'){wait.textContent=ev.label;}
   }
-  if(ev.type==='vote'){addVote(ev.modelo,ev.p_yes);}
+  if(ev.type==='vote'){tv.textContent=(parseInt(tv.textContent||'0')+1);pbar.classList.remove('ind');pbar.style.width=Math.min(70,25+parseInt(tv.textContent)*15)+'%';addVote(ev.modelo,ev.p_yes);}
   if(ev.type==='decision'){setStage(3,'done');}
   if(ev.type==='signature'){setStage(4,'done');}
   if(ev.type==='anchor'){setStage(5,'done');}
@@ -368,6 +382,9 @@ function handle(ev){
 }
 function render(d){
   clearInterval(timerInt);
+  var pbar2=document.getElementById('pbar');
+  pbar2.classList.remove('ind');pbar2.style.width='100%';
+  document.getElementById('tick').innerHTML='MOTOR COMPLETADO · <b>'+Math.floor((Date.now()-t0)/1000)+'s</b>';
   var wait=document.getElementById('wait'),res=document.getElementById('result'),go=document.getElementById('go');
   setStage(5,'done');
   wait.textContent='Completado en '+Math.floor((Date.now()-t0)/1000)+'s — decisión firmada y anclada.';
