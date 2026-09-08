@@ -196,7 +196,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <div class='top'>
     <div class='logo'><img src='data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%20role%3D%22img%22%20aria-labelledby%3D%22kairos-mark-title%20kairos-mark-desc%22%3E%0A%20%20%3Ctitle%20id%3D%22kairos-mark-title%22%3EKairos%20Oracle%3C/title%3E%0A%20%20%3Cdesc%20id%3D%22kairos-mark-desc%22%3EUna%20K%20azul%20dentro%20de%20un%20anillo%3A%20tiempo%2C%20firma%20y%20verificaci%C3%B3n.%3C/desc%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2225%22%20fill%3D%22none%22%20stroke%3D%22%230071e3%22%20stroke-width%3D%224%22/%3E%0A%20%20%3Cpath%20d%3D%22M24%2020v24m15-24L26%2032l13%2012%22%20fill%3D%22none%22%20stroke%3D%22%232997ff%22%20stroke-width%3D%224.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%3C/svg%3E' alt='Kairos' style='width:100%;height:100%;border-radius:10px'/></div>
     <div class='brand'><b>Kairos Oracle</b><span>Analista automático con firma on-chain</span></div>
-    <div class='langs'><button class='lbtn on' id='lbtn-en' onclick='setLang("en")'>EN</button><button class='lbtn' id='lbtn-es' onclick='setLang("es")'>ES</button><button class='lbtn' id='lbtn-pt' onclick='setLang("pt")'>PT</button></div>
+    <div class='langs'><button class='lbtn on' id='lbtn-en' onclick='setLang("en")'>EN</button><button class='lbtn' id='lbtn-es' onclick='setLang("es")'>ES</button></div>
     <div class='live'><span class='dot'></span><span data-i18n='live'>MOTOR EN VIVO</span></div>
   </div>
   <div class='hero'>
@@ -248,7 +248,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class='result hidden' id='result'>
         <div class='bigp'>
           <div class='num' id='bigp'>0<span>%</span></div>
-          <div class='lab'>probabilidad calibrada</div>
+          <div class='lab' data-i18n='k1'>calibrated probability</div>
           <div id='vp' class='verdict vb-pass'>—</div>
         </div>
         <div class='det'>
@@ -265,7 +265,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 
   <div class='topics'>
-    <h2>Temas donde Kairos es fuerte</h2>
+    <h2 data-i18n='topicsTitle'>Where Kairos is strong</h2>
     <div class='tgrid'>
       <button class='topic' onclick="use('Will Bitcoin close above 150k USD in 2026?')"><span class='tag'>Crypto</span><span class='tq' data-i18n='t1'>Will Bitcoin close above 150k USD in 2026?</span></button>
       <button class='topic' onclick="use('Will XRP flip Ethereum in market cap before 2027?')"><span class='tag'>Crypto</span><span class='tq' data-i18n='t2'>Will XRP flip Ethereum in market cap before 2027?</span></button>
@@ -426,14 +426,35 @@ document.addEventListener('mouseleave',function(){sp.style.opacity='0';});
 
 <script>
 var I18N={
-en:{live:'ENGINE LIVE',h1:'Ask the market.<br>Kairos <em>researches it, votes it, signs it.</em>',hp:'A committee of 4 independent models researches the question with live data, calibrates the probability, applies risk discipline, and signs the verdict on Hedera. Every vote appears on screen the moment that model actually finishes.',ph:'Ask a yes-or-no question — e.g. Will ETH hit 10k USD in 2026?',analyze:'Analyze',cancel:'✕ Cancel',st0:'Research',st1:'Committee',st2:'Calibration',st3:'Decision',st4:'Signature',st5:'HCS Anchor',wait0:'Ready for your question. The engine takes ~90 seconds — you will see each real pipeline stage while it works.',hint:'Ideal format: binary questions with a defined close (yes or no?). Kairos researches live sources, the committee votes, and you get a calibrated probability + signed verdict.',t1:'Will Bitcoin close above 150k USD in 2026?',t2:'Will XRP flip Ethereum in market cap before 2027?',t3:'Will the Fed cut rates at its next meeting?',t4:'Will inflation in Argentina fall below 30% in 2026?',t5:'Will the SpaceX Starship reach orbit before 2027?',t6:'Will OpenAI ship GPT-6.5 before the end of 2026?',t7:'Will the Chiefs win the Super Bowl in February 2027?',t8:'Will Brent crude average above 80 USD in Q4 2026?'},
-es:{live:'MOTOR EN VIVO',h1:'Pregúntale al mercado.<br>Kairos <em>lo investiga, lo vota y lo firma.</em>',hp:'Un comité de 4 modelos independientes analiza la pregunta con datos vivos, calibra la probabilidad, aplica disciplina de riesgo y firma el veredicto en Hedera. Cada voto aparece en pantalla en el momento real en que el modelo termina.',ph:'Haz una pregunta de sí o no — p. ej. ¿ETH superará 10k USD en 2026?',analyze:'Analizar',cancel:'✕ Cancelar',st0:'Investigación',st1:'Comité',st2:'Calibración',st3:'Decisión',st4:'Firma',st5:'Ancla HCS',wait0:'Listo para tu pregunta. El motor tarda ~90 segundos: verás cada etapa real del pipeline.',hint:'Formato ideal: preguntas binarias con cierre definido (¿sí o no?). Kairos investiga fuentes vivas, el comité vota, y recibes la probabilidad calibrada + veredicto firmado.',t1:'¿Bitcoin cerrará 2026 por encima de 150,000 USD?',t2:'¿XRP superará a Ethereum en capitalización antes de 2027?',t3:'¿La Fed recortará tasas en su próxima reunión?',t4:'¿La inflación en Argentina caerá por debajo del 30% en 2026?',t5:'¿El Starship de SpaceX alcanzará órbita antes de 2027?',t6:'¿OpenAI lanzará GPT-6.5 antes de fin de 2026?',t7:'¿Los Chiefs ganarán el Super Bowl de febrero de 2027?',t8:'¿El crudo Brent promediará más de 80 USD en Q4 2026?'},
-pt:{live:'MOTOR AO VIVO',h1:'Pergunte ao mercado.<br>Kairos <em>pesquisa, vota e assina.</em>',hp:'Um comitê de 4 modelos independentes pesquisa a pergunta com dados ao vivo, calibra a probabilidade, aplica disciplina de risco e assina o veredito na Hedera. Cada voto aparece na tela no momento real em que o modelo termina.',ph:'Faça uma pergunta de sim ou não — ex. O ETH chegará a 10k USD em 2026?',analyze:'Analisar',cancel:'✕ Cancelar',st0:'Pesquisa',st1:'Comitê',st2:'Calibração',st3:'Decisão',st4:'Assinatura',st5:'Âncora HCS',wait0:'Pronto para sua pergunta. O motor leva ~90 segundos: você verá cada etapa real do pipeline.',hint:'Formato ideal: perguntas binárias com fechamento definido (sim ou não?). O Kairos pesquisa fontes ao vivo, o comitê vota, e você recebe a probabilidade calibrada + veredito assinado.',t1:'O Bitcoin fechará 2026 acima de 150.000 USD?',t2:'O XRP superará o Ethereum em capitalização antes de 2027?',t3:'O Fed cortará juros na próxima reunião?',t4:'A inflação na Argentina cairá abaixo de 30% em 2026?',t5:'O Starship da SpaceX alcançará órbita antes de 2027?',t6:'A OpenAI lançará o GPT-6.5 antes do fim de 2026?',t7:'Os Chiefs vencerão o Super Bowl de fevereiro de 2027?',t8:'O Brent terá média acima de 80 USD no 4º trimestre de 2026?'}};
+en:{live:'ENGINE LIVE',h1:'Ask the market.<br>Kairos <em>researches it, votes it, signs it.</em>',hp:'A committee of 4 independent models researches the question with live data, calibrates the probability, applies risk discipline, and signs the verdict on Hedera. Every vote appears on screen the moment that model actually finishes.',ph:'Ask a yes-or-no question — e.g. Will ETH hit 10k USD in 2026?',analyze:'Analyze',cancel:'Cancel',st0:'Research',st1:'Committee',st2:'Calibration',st3:'Decision',st4:'Signature',st5:'HCS Anchor',wait0:'Ready for your question. The engine takes ~90 seconds — you will see each real pipeline stage while it works.',hint:'Ideal format: binary questions with a defined close (yes or no?). Kairos researches live sources, the committee votes, and you get a calibrated probability + signed verdict.',topicsTitle:'Where Kairos is strong',k1:'calibrated probability',d1:'Reading',d2:'Factors',d3:'Sources',d4:'Decision trace',d5:'On-chain proof',s1:'Calibration measured, not promised',s2:'Pay per forecast (x402)',s3:'On-chain proof',s4:'How it decides',b1l:'Calibration measured (The Graph A/B)',b2l:'Real x402 payments',b5l:'Public endpoint',b6l:'Committee',b7l:'Open repo',b8l:'Topics',c1:'Continuity Track',c2:'Open Source (MIT)',c3:'Check-in #1 done · #2 on Sep 10',c4:'Partners 3/3 · Hedera + The Graph + Ledger',c5:'Video 2-4 min · 720p+ · human voice',c6:'Submit Sep 13, 12:00pm ET',t1:'Will Bitcoin close above 150k USD in 2026?',t2:'Will XRP flip Ethereum in market cap before 2027?',t3:'Will the Fed cut rates at its next meeting?',t4:'Will inflation in Argentina fall below 30% in 2026?',t5:'Will the SpaceX Starship reach orbit before 2027?',t6:'Will OpenAI ship GPT-6.5 before the end of 2026?',t7:'Will the Chiefs win the Super Bowl in February 2027?',t8:'Will Brent crude average above 80 USD in Q4 2026?'},
+es:{live:'MOTOR EN VIVO',h1:'Pregúntale al mercado.<br>Kairos <em>lo investiga, lo vota y lo firma.</em>',hp:'Un comité de 4 modelos independientes analiza la pregunta con datos vivos, calibra la probabilidad, aplica disciplina de riesgo y firma el veredicto en Hedera. Cada voto aparece en pantalla en el momento real en que el modelo termina.',ph:'Haz una pregunta de sí o no — p. ej. ¿ETH superará 10k USD en 2026?',analyze:'Analizar',cancel:'Cancelar',st0:'Investigación',st1:'Comité',st2:'Calibración',st3:'Decisión',st4:'Firma',st5:'Ancla HCS',wait0:'Listo para tu pregunta. El motor tarda ~90 segundos: verás cada etapa real del pipeline.',hint:'Formato ideal: preguntas binarias con cierre definido (¿sí o no?). Kairos investiga fuentes vivas, el comité vota, y recibes la probabilidad calibrada + veredicto firmado.',topicsTitle:'Temas donde Kairos es fuerte',k1:'probabilidad calibrada',d1:'Lectura',d2:'Factores',d3:'Fuentes',d4:'Rastro de decisión',d5:'Prueba on-chain',s1:'Calibración medida, no prometida',s2:'Pagar por un forecast (x402)',s3:'Prueba on-chain',s4:'Cómo decide',b1l:'Calibración medida (A/B The Graph)',b2l:'Pagos x402 reales',b5l:'Endpoint público',b6l:'Comité',b7l:'Repo abierto',b8l:'Temas',c1:'Continuity Track',c2:'Open Source (MIT)',c3:'Check-in #1 hecho · #2 el 10-sep',c4:'Partners 3/3 · Hedera + The Graph + Ledger',c5:'Video 2-4 min · 720p+ · voz humana',c6:'Submit 13-sep 12:00pm ET',t1:'¿Bitcoin cerrará 2026 por encima de 150,000 USD?',t2:'¿XRP superará a Ethereum en capitalización antes de 2027?',t3:'¿La Fed recortará tasas en su próxima reunión?',t4:'¿La inflación en Argentina caerá por debajo del 30% en 2026?',t5:'¿El Starship de SpaceX alcanzará órbita antes de 2027?',t6:'¿OpenAI lanzará GPT-6.5 antes de fin de 2026?',t7:'¿Los Chiefs ganarán el Super Bowl de febrero de 2027?',t8:'¿El crudo Brent promediará más de 80 USD en Q4 2026?'}};
+var SWAP=[
+['Calibration measured (The Graph A/B)','Calibración medida (A/B The Graph)'],
+['Brier with/without on-chain evidence, n=12 · Δ +0.0168 published with an honest read','Brier con/sin evidencia on-chain, n=12 · Δ +0.0168 publicado con lectura honesta'],
+['Real x402 payments','Pagos x402 reales'],
+['settlements on Hashscan via Blocky402','settlements en Hashscan vía Blocky402'],
+['green in the gate','verdes en el gate'],
+['submitted and verified server-side','enviado y verificado en el servidor'],
+['Public endpoint','Endpoint público'],
+['UI + x402 + health in one URL · ports 443 and 8789 · verified from the internet','UI + x402 + health en una URL · puertos 443 y 8789 · verificado desde internet'],
+['Committee','Comité'],['Open repo','Repo abierto'],['new work open source','trabajo nuevo open source'],['Topics','Temas'],['domains with curated questions','terrenos con preguntas curadas'],
+['Calibration measured, not promised','Calibración medida, no prometida'],['Pay per forecast (x402)','Pagar por un forecast (x402)'],['How it decides','Cómo decide'],
+['Reading','Lectura'],['Factors','Factores'],['Sources','Fuentes'],['Decision trace','Rastro de decisión'],['calibrated probability','probabilidad calibrada'],['Where Kairos is strong','Temas donde Kairos es fuerte'],
+];
+function applySwap(l){
+  document.querySelectorAll('.bl,.bs,h2,h3,.lab,.sum,.cbadge,.pd,.pn,.foot,.tag').forEach(function(el){
+    var t=el.textContent.trim();
+    for(var k=0;k<SWAP.length;k++){
+      if(t===SWAP[k][0]||t===SWAP[k][1]){el.textContent=(l==='es'?SWAP[k][1]:SWAP[k][0]);break;}
+    }
+  });
+}
 function setLang(l){
   localStorage.setItem('kairos-lang',l);
-  ['en','es','pt'].forEach(function(x){document.getElementById('lbtn-'+x).classList.toggle('on',x===l);});
-  document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(I18N[l]&&I18N[l][k])el.innerHTML=I18N[l][k];});
-  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){var k=el.getAttribute('data-i18n-ph');if(I18N[l]&&I18N[l][k])el.placeholder=I18N[l][k];});
+  ['en','es'].forEach(function(x){document.getElementById('lbtn-'+x).classList.toggle('on',x===l);});
+  document.querySelectorAll('[data-i18n]').forEach(function(el){var kk=el.getAttribute('data-i18n');if(I18N[l]&&I18N[l][kk])el.innerHTML=I18N[l][kk];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){var kk=el.getAttribute('data-i18n-ph');if(I18N[l]&&I18N[l][kk])el.placeholder=I18N[l][kk];});
+  applySwap(l);
 }
 function cancelAsk(){
   if(window._ctrl){try{window._ctrl.abort();}catch(e){}window._ctrl=null;}
