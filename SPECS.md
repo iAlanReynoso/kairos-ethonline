@@ -47,7 +47,7 @@ That refusal is the demo: a forecaster that says 'no' with a signed trace.
 1. production HCS anchoring of every forecast digest (topic `0.0.10374210`, live Sept timestamps)
 2. x402 pay-per-forecast endpoint, live on Hedera testnet, settlement via Blocky402 + payment
    audit trail on HCS
-3. public HTTP facade (health + x402) reachable without an API key
+3. public HTTP facade (interactive platform + live SSE stream + health + x402) reachable without an API key
 4. The Graph live on-chain evidence stage for the committee (in progress)
 5. Ledger Key Ring + device-confirmation in front of the high-risk path (in progress)
 6. the public demo UI (this repo) with the full decision trace per answer

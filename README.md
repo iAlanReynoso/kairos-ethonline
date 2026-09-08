@@ -108,8 +108,12 @@ curl -s https://ialanreynoso.tail3a9281.ts.net/v1/forecast?question=Will%20ETH%2
 # → HTTP 200 + {verdict, signature, anchor:{topic_id, hashscan}}
 ```
 
-The free `POST /forecast` (research + committee + Kelly + signing) runs locally — see
-[VERIFY.md](VERIFY.md). The public facade exposes only `/health` and the x402-gated `/v1/forecast`.
+The free live forecast pipeline runs on the public facade too: open
+`https://ialanreynoso.tail3a9281.ts.net` and ask any yes/no question — the UI streams
+the full trace (research → votes → calibration → decision → signature → HCS anchor) via
+`POST /forecast/stream` (no per-IP rate limit; a soft concurrency guard only). A limited
+`POST /forecast` (5 per 10 min per IP) is also available, and `/v1/forecast` stays
+x402-gated. See [VERIFY.md](VERIFY.md).
 
 ## Security & boundaries
 
