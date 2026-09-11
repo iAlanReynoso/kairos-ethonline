@@ -117,7 +117,10 @@ body{background:#060b13;color:var(--paper)}body>.wrap{position:relative;z-index:
 </div>
 <script>
 'use strict';
-const ENDPOINT = 'https://ialanreynoso.tail3a9281.ts.net/forecast/stream';
+const EP_443 = 'https://ialanreynoso.tail3a9281.ts.net/forecast/stream';
+const EP_8443 = 'https://ialanreynoso.tail3a9281.ts.net:8443/forecast/stream';
+let ENDPOINT = EP_443;
+fetch('https://ialanreynoso.tail3a9281.ts.net/health',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;}).catch(()=>{ENDPOINT=EP_8443;});
 const STAGES=['research','committee','calibration','decision','signature','anchor'];
 const I18N={
 en:{
