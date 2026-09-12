@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta property='og:title' content='Kairos — Inside the forecasting engine'><meta property='og:description' content='AI forecasting oracle: 4-model committee, calibrated probability, signed and anchored on Hedera. ETHOnline 2026.'><meta property='og:image' content='https://ialanreynoso.tail3a9281.ts.net/og.png'><meta name='twitter:card' content='summary_large_image'>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#060b13">
 <meta name="description" content="Four independent models. One risk-aware forecast. A signed, verifiable record on Hedera testnet.">
 <title>Kairos — A clearer moment to decide</title>
@@ -74,6 +74,47 @@ body{background:#060b13;color:var(--paper)}body>.wrap{position:relative;z-index:
 @media(max-width:1024px){.faq-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.faq{padding:24px 0}.faq-grid{grid-template-columns:minmax(0,1fr);gap:6px}.faq-q{min-height:44px;padding-block:9px;font-size:15px;line-height:1.4}.faq-panel{padding:16px}.faq-measure{left:16px;right:16px;top:16px}}
 @media(prefers-reduced-motion:reduce){.faq-q,.faq-a{transition:none;animation:none}}
+
+/* Touch geometry is scoped so desktop spacing and typography stay unchanged. */
+@media(pointer:coarse){
+ html{scroll-padding-top:calc(112px + env(safe-area-inset-top,0px))}
+ body>.wrap{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+ .site-header{height:auto;min-height:calc(96px + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px)}
+ .site-footer{padding-bottom:calc(30px + env(safe-area-inset-bottom,0px))}
+ a[href],button,input,textarea,select,summary,[role="button"]{min-width:44px;min-height:44px;touch-action:manipulation}
+ a[href]{display:inline-flex;align-items:center}
+ summary{padding-block:12px}
+ .languages button{min-width:44px;min-height:44px}
+ .form-bar,.form-buttons{flex-wrap:wrap}
+ .form-buttons{justify-content:flex-end;max-width:100%}
+ .form-hint{flex-shrink:0}
+ .motion-control{margin-top:12px}
+ .receipt.arrive{animation:arrive .75s var(--ease) both}
+ .primary-link,.submit{transform:none!important}
+ .primary-link:before,.submit:before,.room:before{display:none}
+ .nav{flex-wrap:wrap;justify-content:center;gap:4px 16px}
+ .site-header{gap:12px}
+ .header-end{flex-shrink:0}
+ .footer-links{flex-wrap:wrap}
+}
+@media(pointer:coarse) and (max-width:540px){
+ .site-header{min-height:calc(80px + env(safe-area-inset-top,0px))}
+ .orbital-caption{bottom:-34px}
+ .form-hint{display:none}
+ .form-bar{justify-content:flex-end}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:540px){
+ .site-header{flex-wrap:wrap;padding-bottom:8px}
+ .site-header .nav{order:3;width:100%;display:flex}
+ .hero{display:grid;grid-template-columns:1.25fr 1fr;min-height:470px;padding:36px 0 76px}
+ .hero h1{font-size:clamp(46px,6.4vw,60px)}
+ .observatory{position:relative;inset:auto;width:100%;height:260px;margin:0}
+ .engine-stage{height:330px}
+ .scene-center{width:42%}.scene-title{font-size:28px}.engine-brand{width:40px;height:40px}
+ .scene-node{width:110px}.scene-node:nth-child(odd){left:15%}.scene-node:nth-child(even){left:85%}
+ .question-shell textarea{min-height:100px}
+}
+
 </style>
 </head>
 <body>
@@ -333,6 +374,7 @@ $('download').addEventListener('click',()=>{if(!state.result)return;const blob=n
 Object.assign(I18N.en,{heroEyebrow:'INSIDE THE FORECASTING ENGINE',heroLine:'Enter the',heroEmphasis:'uncertainty.',heroCopy:'Four independent minds, thinking in the open. Step inside the engine. Follow a question as it becomes a decision — and a record you can inspect.',heroCta:'Enter the engine',roomTitle:'The engine room',roomEyebrow:'01 / A QUESTION SETS IT IN MOTION',sceneLabel:'ENGINE / EVENT STREAM',sceneIdle:'Awaiting your question',sceneWaiting:'Listening.',sceneResearch:'Searching.',sceneCommittee:'Four perspectives.',sceneCalibration:'Finding the center.',sceneSignature:'Signing the record.',sceneAnchor:'Record anchored.',sceneComplete:'Record received.',sceneStopped:'Stream stopped.',sceneIdleNote:'A space for independent reasoning.',sceneWaitNote:'Connected to your request. Awaiting the engine.',sceneResearchNote:'Gathering evidence before conviction.',sceneCommitteeNote:'Only received model votes illuminate a node.',sceneCalibrationNote:'Converging. Dispersion remains visible.',sceneSignatureNote:'EIP-191 · digest received',sceneAnchorNote:'Anchor received · not independently verified',sceneCompleteNote:'Read the verdict and inspect the record below.',sceneStopNote:'Partial data remains available below.',sceneScope:'LIVE GEOMETRY / RECEIVED EVENTS ONLY',sceneSigmaPending:'σ pending · awaiting the engine',sceneSigma:'Engine dispersion · σ {value}',sceneDigestPending:'Awaiting the signature digest',sceneScroll:'SCROLL TO THE ENGINE',sceneLocked:'ANCHOR RECEIVED',sceneUnsent:'NO FORECAST RUNNING',scenePartial:'PARTIAL RECORD',brierScores:'0.2169 → 0.2002 · A/B Brier'});
 Object.assign(I18N.es,{heroEyebrow:'DENTRO DEL MOTOR DE PRONÓSTICOS',heroLine:'Entra en la',heroEmphasis:'incertidumbre.',heroCopy:'Cuatro mentes independientes, razonando a la vista. Entra en el motor. Sigue una pregunta hasta convertirla en una decisión y un registro que puedes examinar.',heroCta:'Entrar al motor',roomTitle:'La sala del motor',roomEyebrow:'01 / UNA PREGUNTA LO PONE EN MARCHA',sceneLabel:'MOTOR / FLUJO DE EVENTOS',sceneIdle:'Esperando tu pregunta',sceneWaiting:'Escuchando.',sceneResearch:'Investigando.',sceneCommittee:'Cuatro perspectivas.',sceneCalibration:'Buscando el centro.',sceneSignature:'Firmando el registro.',sceneAnchor:'Registro anclado.',sceneComplete:'Registro recibido.',sceneStopped:'Flujo detenido.',sceneIdleNote:'Un espacio para criterios independientes.',sceneWaitNote:'Solicitud en curso. Esperando al motor.',sceneResearchNote:'Reunir evidencia antes de tomar posición.',sceneCommitteeNote:'Solo los votos recibidos encienden un nodo.',sceneCalibrationNote:'Convergencia con dispersión visible.',sceneSignatureNote:'EIP-191 · digest recibido',sceneAnchorNote:'Anclaje recibido · sin verificación independiente',sceneCompleteNote:'Lee el veredicto y examina el registro debajo.',sceneStopNote:'Los datos parciales siguen disponibles debajo.',sceneScope:'GEOMETRÍA EN VIVO / SOLO EVENTOS RECIBIDOS',sceneSigmaPending:'σ pendiente · esperando al motor',sceneSigma:'Dispersión del motor · σ {value}',sceneDigestPending:'Esperando el digest de la firma',sceneScroll:'BAJA A LA SALA DEL MOTOR',sceneLocked:'ANCLAJE RECIBIDO',sceneUnsent:'SIN PRONÓSTICO EN CURSO',scenePartial:'REGISTRO PARCIAL',brierScores:'0.2169 → 0.2002 · Brier A/B'});
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const coarsePointer=matchMedia('(pointer: coarse)');
 const motionAllowed=()=>!reducedMotion.matches&&!paused&&!document.hidden;
 const kinetic=new Map();
 function countTo(el,value,unit=false){
@@ -373,10 +415,16 @@ class EngineScene{
   this.particles=Array.from({length:480},(_,i)=>{const angle=rand()*Math.PI*2,r=.7+rand()*.36,z=rand();return {i,a:angle,r,z,seed:rand(),x:Math.cos(angle)*r,y:Math.sin(angle)*r*.6,vx:0,vy:0,depth:z};});
   this.sprites=new Map();this.resize();
   window.addEventListener('resize',()=>{this.resize();this.wake();},{passive:true});window.addEventListener('scroll',()=>{this.scroll=scrollY;this.layoutDirty=true;this.wake();},{passive:true});
-  document.addEventListener('pointermove',e=>{if(e.pointerType==='touch'||!motionAllowed())return;this.pointer.tx=(e.clientX/innerWidth-.5)*2;this.pointer.ty=(e.clientY/innerHeight-.5)*2;},{passive:true});
+  const point=e=>{if(!motionAllowed())return;this.pointer.tx=(e.clientX/innerWidth-.5)*2;this.pointer.ty=(e.clientY/innerHeight-.5)*2;this.wake();};
+  document.addEventListener('pointermove',point,{passive:true});
+  document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')point(e);},{passive:true});
+  const release=e=>{if(e.pointerType==='touch'){this.pointer.tx=0;this.pointer.ty=0;}};
+  document.addEventListener('pointerup',release,{passive:true});
+  document.addEventListener('pointercancel',release,{passive:true});
   document.addEventListener('pointerout',e=>{if(!e.relatedTarget){this.pointer.tx=0;this.pointer.ty=0;}},{passive:true});
   document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('motion-paused',paused||document.hidden);this.last=0;if(document.hidden){cancelAnimationFrame(this.raf);this.raf=0;}else this.wake();});
   reducedMotion.addEventListener('change',()=>{this.last=0;this.wake();});
+  coarsePointer.addEventListener('change',()=>{this.last=0;this.wake();});
   this.wake();
  }
  resize(){
@@ -478,7 +526,20 @@ class EngineScene{
   const age=this.time-this.decisionAt;if(!staticFrame&&age>=0&&age<1100){const k=age/1100;c.strokeStyle=`rgba(${rgb},${(1-k)*.65})`;c.lineWidth=2*(1-k)+.5;c.beginPath();c.ellipse(cx,cy,Math.max(1,sx*k*2.8),Math.max(1,sy*k*2.8),0,0,Math.PI*2);c.stroke();if(age<250){c.fillStyle=`rgba(${rgb},${.07*(1-age/250)})`;c.fillRect(0,0,local?this.lw:this.w,local?this.lh:this.h);}}
   c.restore();
  }
- wake(){if(document.hidden)return;if(!motionAllowed()){cancelAnimationFrame(this.raf);this.raf=0;this.tick(performance.now(),true);return;}if(this.raf)return;const frame=now=>{this.raf=0;if(!motionAllowed())return;this.tick(now);this.raf=requestAnimationFrame(frame);};this.raf=requestAnimationFrame(frame);}
+ wake(){
+  if(document.hidden)return;
+  if(!motionAllowed()){cancelAnimationFrame(this.raf);this.raf=0;this.tick(performance.now(),true);return;}
+  if(this.raf)return;
+  const frame=now=>{
+   this.raf=0;if(!motionAllowed())return;this.tick(now);
+   // On touch devices, let the CPU rest while reading below both canvases.
+   // Scroll, resize, pointer input and SSE rendering wake the scene again.
+   const pendingNumbers=Array.from(kinetic.values()).some(item=>item.target!==null&&!item.done);
+   if(coarsePointer.matches&&!this.hero.visible&&!this.roomVisible&&!pendingNumbers&&this.digestProgress>=this.digest.length){this.last=0;return;}
+   this.raf=requestAnimationFrame(frame);
+  };
+  this.raf=requestAnimationFrame(frame);
+ }
 }
 const scene=new EngineScene();
 function syncMotion(){scene.sync();}
