@@ -10,14 +10,22 @@ Cualquier otra ruta → 404. CORS abierto (la UI de GitHub/raw puede llamar al e
 """
 from __future__ import annotations
 
+import asyncio
+import json
 import os
 import sys
 import time
+import traceback
 from typing import Any
 
 from aiohttp import ClientSession, web
 
 UPSTREAM = "http://127.0.0.1:8787"
+# keepalive SSE: el motor puede tardar 50-90 s sin emitir nada (etapa 'research' -> primer voto).
+# La UI corta a los 90 s sin datos y los proxies pueden cerrar conexiones ociosas: mandamos
+# un comentario SSE cada KEEPALIVE segundos para mantener viva la conexion y reiniciar el timer.
+KEEPALIVE = 10
+STREAM_LOG = "/home/reyno/polymarket-bot/logs/stream_errors.log"
 UI_PATH = os.environ.get("KAIROS_UI_PATH",
                           "/home/reyno/polymarket-bot/docs/demo/kairos_ui_v3.html")
 
@@ -69,28 +77,57 @@ async def forecast_public(request: web.Request) -> web.Response:
 # comparten request.remote (127.0.0.1) y un cupo por IP dejaba la demo "rota" en cuanto
 # Alan o los jueces probaban el diseno (429 silencioso). Guard suave de concurrencia.
 _stream_active = 0
-MAX_STREAMS = 3
+# 6 en vez de 3: un cliente que aborta retiene su slot hasta que el motor termina (hasta ~90 s).
+MAX_STREAMS = 6
 
 
 async def stream_public(request: web.Request) -> web.StreamResponse:
+    """Proxy SSE con keepalive, error explicito y liberacion garantizada del slot."""
     global _stream_active
     if _stream_active >= MAX_STREAMS:
-        return web.json_response({"error": "busy (max 3 concurrentes); reintenta en unos segundos"}, status=429)
+        return web.json_response(
+            {"error": f"busy (max {MAX_STREAMS} concurrentes); reintenta en unos segundos"},
+            status=429,
+        )
     _stream_active += 1
-    body = await request.read()
     resp = web.StreamResponse(status=200, headers={
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
         "Access-Control-Allow-Origin": "*",
     })
-    await resp.prepare(request)
     try:
+        # todo adentro del try: si algo falla, el slot se libera SIEMPRE (antes se fugaba y
+        # dejaba la plataforma en 'busy' permanente, que es un fallo duro para los jueces).
+        body = await request.read()
+        await resp.prepare(request)
+        # primer byte inmediato: que el navegador y los proxies sepan que el stream vive
+        await resp.write(b": kairos stream abierto\n\n")
         async with ClientSession() as s:
             async with s.post(f"{UPSTREAM}/forecast/stream", data=body, timeout=None) as r:
-                async for chunk in r.content.iter_any():
+                it = r.content.iter_any()
+                while True:
+                    try:
+                        chunk = await asyncio.wait_for(it.__anext__(), timeout=KEEPALIVE)
+                    except asyncio.TimeoutError:
+                        await resp.write(b": keepalive\n\n")  # mantiene viva la conexion y reinicia el timer de la UI
+                        continue
+                    except StopAsyncIteration:
+                        break
                     await resp.write(chunk)
-    except Exception:
-        pass
+    except Exception as exc:
+        # antes esto era un 'except: pass' silencioso: el usuario veia 'failed' sin motivo y no quedaba rastro.
+        try:
+            payload = json.dumps({"type": "error", "message": f"stream interrumpido ({type(exc).__name__}); reintenta"})
+            await resp.write(f"data: {payload}\n\n".encode())
+        except Exception:
+            pass
+        try:
+            with open(STREAM_LOG, "a", encoding="utf-8") as fh:
+                fh.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} stream error: {exc!r}\n{traceback.format_exc()}\n")
+        except Exception:
+            pass
     finally:
         _stream_active -= 1
     return resp
